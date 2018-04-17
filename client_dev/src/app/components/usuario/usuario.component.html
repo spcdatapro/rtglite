@@ -1,0 +1,131 @@
+<div class="container-fluid">
+    <ngb-tabset #t="ngbTabset">
+        <ngb-tab id="tabListaUsuarios" title="Lista de usuarios">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Usuario</th>
+                            <th>Correo electrónico</th>                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let usr of usuarios" (click)="getUsuario(usr._id, t)">
+                            <td>{{usr.nombre}}</td>
+                            <td>{{usr.usuario}}</td>
+                            <td>{{usr.correoe}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab id="tabUsuario" title="Usuario">
+            <ng-template ngbTabContent>
+                <form #frmUsuario="ngForm" (ngSubmit)="onSubmitUsuario()">
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="txtNomUsr">Nombre:</label>
+                                <input name="txtNomUsr" id="txtNomUsr" type="text" class="form-control form-control-sm" #nombreUsr="ngModel"
+                                    [(ngModel)]="usuario.nombre" placeholder="Nombre completo" required/>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="txtCorreoEUsr">E-mail:</label>
+                                <input name="txtCorreoEUsr" id="txtCorreoEUsr" type="email" class="form-control form-control-sm" #emailUsr="ngModel"
+                                    [(ngModel)]="usuario.correoe" placeholder="E-mail" required/>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="txtUsuarioUsr">Usuario:</label>
+                                <input name="txtUsuarioUsr" id="txtUsuarioUsr" type="text" class="form-control form-control-sm" #usuarioUsr="ngModel" [(ngModel)]="usuario.usuario" 
+                                    placeholder="Usuario para la aplicación" required/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="txtPassUsr">Contraseña:</label>
+                                <input name="txtPassUsr" id="txtPassUsr" type="password" class="form-control form-control-sm" #passUsr="ngModel" [(ngModel)]="contraseniaTemporal"
+                                    placeholder="Contraseña de ingreso a la aplicación" />
+                            </div>
+                        </div>
+                        <div class="col-4"></div>
+                        <div class="col-4"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <table class="table table-light table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Roles</th>
+                                        <th>
+                                            <select #selRol class="form-control form-control-sm" required>
+                                                <option *ngFor="let rl of roles" value="{{rl._id}}">{{rl.descripcion}}</option>
+                                            </select>                                            
+                                        </th>
+                                        <th>
+                                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="addRolUsr(selRol)">
+                                                <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let ru of usuario.roles; let i = index">
+                                        <td colspan="2">{{ru.descripcion}}</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-4">
+                            <table class="table table-light table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Restaurantes</th>
+                                        <th>
+                                            <select #selRestaurante class="form-control form-control-sm" required>
+                                                <option *ngFor="let rst of restaurantes" value="{{rst._id}}">{{rst.nombre}}</option>
+                                            </select>
+                                        </th>
+                                        <th>
+                                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="addRestauranteUsr(selRestaurante)">
+                                                <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let rest of usuario.restaurante; let i = index">
+                                        <td colspan="2">{{rest.nombre}}</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-sm">
+                        <button type="submit" class="btn btn-outline-primary btn-sm" [disabled]="!frmUsuario.form.valid" *ngIf="!usuario._id">
+                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="!frmUsuario.form.valid" (click)="updUsuario()" *ngIf="usuario._id">
+                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" (click)="delUsuario()" *ngIf="usuario._id">
+                            <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="nuevoUsuario()" *ngIf="usuario._id">
+                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </form>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>    
+</div>
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>

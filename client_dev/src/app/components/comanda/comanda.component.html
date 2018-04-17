@@ -1,0 +1,806 @@
+<div class="container-fluid">
+    <h3>Comanda de {{clienteObj.nombre}} <span *ngIf="eshistorica">(Histórica)</span></h3>
+    <div class="row">
+        <div class="col-6">
+            <table>
+                <tbody>
+                    <tr>
+                        <th class="text-right">Dirección de entrega:</th>
+                        <td style="padding-left: 0.25em">
+                            <button class="btn btn-outline-primary btn-sm" (click)="selectDireccionesCliente(modalSelDireccionCliente)">
+                                {{direccionClienteObj.direccion}}, zona {{direccionClienteObj.zona}}, colonia {{direccionClienteObj.colonia}} {{direccionClienteObj.codigoacceso
+                                ? (', código de acceso: ' + direccionClienteObj.codigoacceso) : ''}}
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-right">Teléfono:</th>
+                        <td style="padding-left: 0.25em">
+                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="selectTelefonoCliente(modalSelTelefono)">
+                                {{telefonoClienteObj.telefono}}
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-right">Tipo:</th>
+                        <td style="padding-left: 0.25em; white-space: nowrap;">
+                            <button type="button" class="btn btn-outline-primary btn-sm" style="width: 110px;" *ngFor="let tcom of lstTiposComanda" (click)="setTipoComanda(tcom)">
+                                {{tcom.descripcion}}
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-right">Facturar a:</th>
+                        <td style="padding-left: 0.25em; white-space: nowrap;">                            
+                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="setFacturarA(modalSelFacturarA)">
+                                {{comanda.detfacturara && comanda.detfacturara.length > 0 ? comanda.detfacturara[0].nombre : ''}}, 
+                                {{comanda.detfacturara && comanda.detfacturara.length > 0 ? comanda.detfacturara[0].nit : ''}}, 
+                                {{comanda.detfacturara && comanda.detfacturara.length > 0 ? comanda.detfacturara[0].direccion : ''}}
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-3">
+            <table style="width: 100%; border-collapse: collapse; font-size: 9pt">
+                <thead>
+                    <tr>
+                        <th colspan="2">Notas del cliente</th>
+                    </tr>
+                </thead>                
+                <tbody style="display: inline-block; overflow:auto; height: 100px; width: 100%;">
+                    <tr *ngFor="let nc of clienteObj.notascliente">
+                        <td style="width: 30%; vertical-align: top">{{nc.fecha | date:'dd/MM/yyyy HH:mm'}}</td>
+                        <td style="width: 70%; vertical-align: top"><p>{{nc.notas}}</p></td>
+                    </tr>
+                </tbody>                                                
+            </table>
+        </div>
+        <div class="col-3">
+            <table>
+                <tbody>
+                    <tr>
+                        <td colspan="2" class="text-right">
+                            <button type="button" class="btn btn-outline-success btn-sm btn-block" (click)="verHistorialCliente(modalHistorialCliente)" *ngIf="!eshistorica">Ver historial</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-right">Tiempo ofrecido:</th>
+                        <td>
+                            <select name="selTiempoEntrega" id="selTiempoEntrega" [(ngModel)]="comanda.idtiempoentrega" class="form-control form-control-sm" #tiempoEntrega required>
+                                <option *ngFor="let tent of tiempos" value="{{tent._id}}">{{tent.tiempo}}</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="text-right">Atiende:</th>
+                        <td>
+                            <select name="selAtiende" id="selAtiende" [(ngModel)]="comanda.idrestaurante" class="form-control form-control-sm" #atiende required>
+                                <option *ngFor="let rst of restaurantes" value="{{rst._id}}">{{rst.nombre}}</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr *ngIf="eshistorica">
+                        <th class="text-right">Fecha:</th>
+                        <td>
+                            <input type="date" #txtFComanda="ngModel" [(ngModel)]="comanda.fecha" id="txtFComanda" name="txtFComanda" class="form-control form-control-sm" placeholder="Fecha de comanda" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <h5 class="card-header">Menú</h5>
+                <div class="card-body" style="padding: 0 !important;">                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" *ngFor="let crt of carta">
+                            <span style="padding-right: 1px !important; padding-top: 1px !important" *ngFor="let btn of crt">
+                                <button  class="btn btn-sm btn-outline-secondary" style="font-weight: bold;" (click)="loadCarta(modalComponentes, (btn.nivel + 1), btn._id, btn)">
+                                    {{btn.descripcion}}
+                                </button>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            <div class="card">
+                <h5 class="card-header">
+                    Pedido&nbsp;
+                    <span class="badge badge-info">{{lblTipoComanda | lowercase}}</span>&nbsp;
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="pideNotasPedido(modalNotasPedido)">Notas del pedido</button>
+                </h5>
+                <div class="card-body" style="height: 350px; overflow-y:auto;">
+                    <small>
+                        <table style="width: 100%; border-collapse: collapse !important;">
+                            <tr *ngFor="let dc of detalleComanda; let i = index" style="border-bottom: solid 0.1em lightgray;">
+                                <td class="align-top">                                
+                                    <table style="width: 100%; border-collapse: collapse !important;">
+                                        <tr>
+                                            <td colspan="2" class="align-top">
+                                                <!-- Inicia tabla de extras/notas sobre productos completos -->
+                                                <table style="width: 100%; border-collapse: collapse !important;">
+                                                    <tr>                                                        
+                                                        <td colspan="2" class="align-top" style="white-space: nowrap !important; ">
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="number" #txtCantProd="ngModel" [(ngModel)]="dc.cantidad" id="txtCantProd_{{i}}" name="txtCantProd_{{i}}" 
+                                                                    class="form-control" placeholder="Cantidad" aria-describedby="desc-prod" (change)="calculaTotales()" (blur)="calculaTotales()" />
+                                                                <span class="input-group-addon" id="desc-prod" style="width: 85%">{{dc.descripcion}}</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngFor="let dce of dc.extrasnotas; let l = index">
+                                                        <td class="align-top" style="padding-left: 2em; " [style.white-space]="dce.esextra ? 'nowrap' : 'normal'">
+                                                            <span *ngIf="dce.esextra">
+                                                                <strong style="font-size: 12pt">+</strong> {{dce.descripcion}}</span>
+                                                            <p *ngIf="!dce.esextra">
+                                                                <strong>N:</strong> {{dce.notas}}</p>
+                                                        </td>
+                                                        <td class="align-top text-right">
+                                                            <button type="button" class="btn btn-sm btn-danger" style="font-size: 8pt" (click)="removeExtraNotaProd(i, l)">
+                                                                <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </table>                                               
+                                                <!-- Fin de tabla de extras/notas sobre productos completos -->
+                                            </td>
+                                        </tr>
+                                        <tr *ngFor="let cmp of dc.componentes; let j = index">
+                                            <td class="align-top" style="width: 75%; padding-left: 2em;">
+                                                <!-- Inicia tabla de extras/notas sobre componentes -->
+                                                <table style="width: 100%; border-collapse: collapse !important;">
+                                                    <tr>
+                                                        <td colspan="2" class="align-top">{{cmp.descripcion}}</td>
+                                                    </tr>
+                                                    <tr *ngFor="let extcmp of cmp.extrasnotas; let k = index">
+                                                        <td class="align-top" style="padding-left: 3em; " [style.white-space]="extcmp.esextra ? 'nowrap' : 'normal'">
+                                                            <span *ngIf="extcmp.esextra"><strong style="font-size: 12pt">+</strong> {{extcmp.descripcion}}</span>
+                                                            <p *ngIf="!extcmp.esextra"><strong>N:</strong> {{extcmp.notas}}</p>
+                                                        </td>
+                                                        <td class="align-top text-right">
+                                                            <button type="button" class="btn btn-sm btn-danger" style="font-size: 8pt" (click)="removeExtraNota(i, j, k)">
+                                                                <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                                                            </button>
+                                                        </td>
+                                                    </tr>                                                
+                                                </table>
+                                                <!-- Finaliza tabla de extras/notas sobre componentes -->
+                                            </td>
+                                            <td class="align-top" style="white-space: nowrap">
+                                                <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" *ngIf="dc.tieneextras" (click)="pideExtras(modalExtras, i, j)">Extras</button>
+                                                <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" (click)="pideNotas(modalNotas, i, j)">Notas</button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>                                
+                                <td class="align-top" style="white-space:nowrap">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" *ngIf="dc.tieneextras" (click)="pideExtrasProducto(modalExtrasProducto, i)">Extras</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" (click)="pideNotasProducto(modalNotasProducto, i)">Notas</button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" (click)="editaComponentes(dc, i, modalEditaComponentes)">
+                                            <span class="oi oi-pencil" title="Editar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger" style="font-size: 8pt" (click)="removeItemPedido(i)">
+                                            <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                                        </button>
+                                    </div>                                   
+                                </td>
+                                <td class="align-top text-right">{{dc.precio | number:'1.2-2'}}&nbsp;c/u</td>
+                            </tr>
+                        </table>
+                    </small>
+                </div>
+                <div class="card-footer">
+                    <div style="width:100%; text-align: right; font-weight: bold;">
+                        <span>Total a pagar: {{comanda.totalcomanda | number:'1.2-2'}}</span>
+                    </div>
+                </div>
+                <div class="card-footer text-right" style="padding: 0 !important;">
+                    <div class="btn-group btn-group-sm text-right">
+                        <button type="button" class="btn btn-warning btn-sm" (click)="cancelaPedido()" *ngIf="!eshistorica">Cancelar</button>
+                        <button type="button" class="btn btn-success btn-sm" *ngIf="comanda.totalcomanda > 0 && !eshistorica" (click)="terminarPedido(modalPagar, modalConfirmEnd)" 
+                            [disabled]="!comanda.idtipocomanda || !comanda.idrestaurante || !comanda.idtiempoentrega">
+                            Terminar
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" *ngIf="comanda.totalcomanda > 0 && eshistorica" (click)="guardarHistorica()" 
+                            [disabled]="!comanda.idtipocomanda || !comanda.idrestaurante || !comanda.idtiempoentrega || !comanda.fecha">
+                            Guardar histórica
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row" *ngIf="!eshistorica">
+        <div class="col-12">
+            <table class="table table-hover table-sm table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="3">Recordatorios al operador</th>
+                    </tr>
+                    <tr>
+                        <th>Del</th>
+                        <th>Al</th>
+                        <th>Recordatorio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let b of bans">
+                        <td>{{(b.fechadel | date:'dd/MM/yyyy') || ''}}</td>
+                        <td>{{(b.fechaal | date:'dd/MM/yyyy') || ''}}</td>
+                        <td><p>{{b.banner}}</p></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ng-template #modalSelDireccionCliente let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">¿Cuál es la dirección de entrega?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">       
+            <div class="card-body" style="padding: 0 !important; ">                
+                <table class="table table-hover table-sm table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select name="selTipoDirCli" id="selTipoDirCli" class="form-control form-control-sm" #tipoDirCli="ngModel"
+                                    [(ngModel)]="direccionClienteNueva.idtipodireccion">
+                                    <option *ngFor="let td of tiposDireccion" [ngValue]="td._id">{{td.descripcion}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input name="txtDirCli" id="txtDirCli" type="text" class="form-control form-control-sm" #dirCli="ngModel"
+                                    [(ngModel)]="direccionClienteNueva.direccion" placeholder="Dirección"/>
+                            </td>
+                            <td>
+                                <input name="txtZonaCli" id="txtZonaCli" type="number" class="form-control form-control-sm" #zonaCli="ngModel"
+                                    [(ngModel)]="direccionClienteNueva.zona" placeholder="Zona" min="0"/>
+                            </td>
+                            <td>
+                                <input name="txtColCli" id="txtColCli" type="text" class="form-control form-control-sm" #colCli="ngModel"
+                                    [(ngModel)]="direccionClienteNueva.colonia" placeholder="Colonia"/>
+                            </td>
+                            <td>
+                                <input name="txtCodAccCli" id="txtCodAccCli" type="text" class="form-control form-control-sm" #codAccCli="ngModel"
+                                    [(ngModel)]="direccionClienteNueva.codigoacceso" placeholder="Cód. de acceso"/>
+                            </td>                            
+                            <td>
+                                <select name="selRestCli" id="selRestCli" class="form-control form-control-sm" #restCli="ngModel" [(ngModel)]="direccionClienteNueva.idrestaurante">
+                                    <option *ngFor="let rest of restaurantes" [ngValue]="rest._id">{{rest.nombre}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="nuevaDireccionEntrega(); c(null);">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let dir of direccionesCliente" (click)="c(dir)">
+                            <td>{{dir.idtipodireccion.descripcion}}</td>
+                            <td colspan="5" style="white-space:nowrap; ">
+                                {{dir.direccion}}, zona {{dir.zona}}, colonia {{dir.colonia}}{{dir.codigoacceso ? (', código de acceso: ' + dir.codigoacceso)
+                                : ''}}
+                            </td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>                
+            </div>            
+        </div>
+    </div>
+</ng-template>
+<ng-template #modalHistorialCliente let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Historial de {{clienteObj.nombre}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="height: 650px; overflow-y:auto; ">
+        <small>
+            <div class="card" *ngFor="let histo of histoCliente">
+                <div class="card-header font-weight-bold">{{histo.fecha | date:'dd/MM/yyyy'}}</div>
+                <div class="card-body" style="padding: 0 !important;">
+                    <table style="width: 100%; border-collapse:collapse; border: solid 0.1em lightgray">
+                        <tr style="background-color: #FFFEE0" *ngFor="let det of histo.detallecomanda">
+                            <td>
+                                <table style="width: 100%; border-collapse:collapse;">
+                                    <tr>
+                                        <td>{{det.cantidad}} {{det.descripcion}}</td>
+                                    </tr>
+                                    <tr *ngFor="let compo of det.componentes">
+                                        <td style="padding-left: 1.5em">
+                                            <table style="width: 100%; border-collapse:collapse;">
+                                                <tr>
+                                                    <td>{{compo.descripcion}}</td>
+                                                </tr>
+                                                <tr *ngFor="let ext of compo.extrasnotas">
+                                                    <td style="padding-left: 1.5em">
+                                                        <span *ngIf="ext.esextra">
+                                                            <strong style="font-size: 12pt">+</strong> {{ext.descripcion}}
+                                                        </span>
+                                                        <p *ngIf="!ext.esextra">
+                                                            <strong>N:</strong> {{ext.notas}}
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="card-footer text-right">
+                    <button type="button" class="btn btn-outline-success btn-sm" (click)="c(histo)">Duplicar</button>
+                </div>
+            </div>
+        </small>        
+    </div>
+</ng-template>
+<ng-template #modalComponentes let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Componentes de {{detalleComanda[detalleComanda.length - 1].descripcion}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">            
+            <div class="card-body" style="height: 350px; overflow-y:auto; padding: 0 !important; ">
+                <button type="button" class="btn btn-block btn-outline-secondary btn-sm" *ngFor="let cim of componentesItemMenu; let i = index" (click)="toggleComponente(null, cim.idcomponente)" 
+                    [disabled]="detalleComanda[this.detalleComanda.length - 1].componentes.length == detalleComanda[detalleComanda.length - 1].limitecomponentes">
+                    {{cim.idcomponente.descripcion}}
+                </button>
+                <!--
+                <table class="table table-hover table-sm">
+                    <tr *ngFor="let cim of componentesItemMenu; let i = index">
+                        <td>{{cim.idcomponente.descripcion}}</td>
+                        <td>
+                            <input #cb id="chkCompo_{{i}}" name="chkCompo_{{i}}" type="checkbox" class="form-control" 
+                                (change)="toggleComponente($event, cim.idcomponente)"
+                                [disabled]="!cb.checked && detalleComanda[this.detalleComanda.length - 1].componentes.length == detalleComanda[detalleComanda.length - 1].limitecomponentes"/>
+                        </td>
+                    </tr>
+                </table>
+                -->
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')" [disabled]="detalleComanda[detalleComanda.length - 1].componentes.length == 0">Terminar</button>
+    </div>
+</ng-template>
+<ng-template #modalEditaComponentes let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Componentes de {{detcom.descripcion}}</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="height: 350px; overflow-y:auto; padding: 0 !important; ">
+                <button type="button" class="btn btn-block btn-outline-secondary btn-sm" *ngFor="let cim of componentesItemMenu; let i = index"
+                    (click)="toggleComponenteEdit(null, cim.idcomponente)" [disabled]="detcom.componentes.length == detcom.limitecomponentes">
+                    {{cim.idcomponente.descripcion}}
+                </button>
+                <!--
+                <table class="table table-hover table-sm">
+                    <tr *ngFor="let cim of componentesItemMenu; let i = index">
+                        <td>{{cim.idcomponente.descripcion}}</td>
+                        <td>
+                            <input #cbe id="chkCompoE_{{i}}" name="chkCompoE_{{i}}" type="checkbox" class="form-control" (change)="toggleComponenteEdit($event, cim.idcomponente)"
+                                [disabled]="!cbe.checked && detcom.componentes.length == detcom.limitecomponentes"
+                            />
+                        </td>
+                    </tr>
+                </table>
+                -->
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')" [disabled]="detcom.componentes.length == 0">Terminar</button>
+    </div>
+</ng-template>
+<ng-template #modalExtras let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Extras</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="height: 350px; overflow-y:auto; padding: 0 !important; ">
+                <table class="table table-hover table-sm">
+                    <tr *ngFor="let ext of lstComposExtras; let i = index">
+                        <td>{{ext.descripcion}}</td>
+                        <td>
+                            <input #cbext id="chkExt_{{i}}" name="chkExt_{{i}}" type="checkbox" class="form-control" (change)="toggleExtras($event, ext)"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Terminar</button>
+    </div>
+</ng-template>
+<ng-template #modalNotas let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Nota</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="height: 350px; overflow-y:auto; padding: 0 !important; ">
+                <textarea #txtDetCompoNotas id="txtDetCompoNotas" name="txtDetCompoNotas" class="form-control" style="height: 100%"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c(txtDetCompoNotas.value)">Terminar</button>
+    </div>
+</ng-template>
+<ng-template #modalExtrasProducto let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Extras</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="height: 350px; overflow-y:auto; padding: 0 !important; ">
+                <table class="table table-hover table-sm">
+                    <tr *ngFor="let ext of lstComposExtras; let i = index">
+                        <td>{{ext.descripcion}}</td>
+                        <td>
+                            <input #cbextprod id="chkExtProd_{{i}}" name="chkExtProd_{{i}}" type="checkbox" class="form-control" (change)="toggleExtrasProducto($event, ext)"
+                            />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Close click')">Terminar</button>
+    </div>
+</ng-template>
+<ng-template #modalNotasProducto let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Nota del producto</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="height: 350px; overflow-y:auto; padding: 0 !important; ">
+                <textarea #txtNotProd id="txtNotProd" name="txtNotProd" class="form-control" style="height: 100%"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c(txtNotProd.value)">Terminar</button>
+    </div>
+</ng-template>
+<ng-template #modalNotasPedido let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Notas del pedido</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="height: 350px; overflow-y:auto; padding: 0 !important; ">
+                <textarea #txtNotPedido="ngModel" [(ngModel)]="comanda.notas" id="txtNotPedido" name="txtNotPedido" class="form-control" style="height: 100%"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('')">Terminar</button>
+    </div>
+</ng-template>
+<ng-template #modalPagar let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Datos de facturación</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="height: 600px; overflow-y:auto; padding: 0.2em !important; ">
+                <table style="width: 100%; border-collapse: collapse">
+                    <tr>                        
+                        <td>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item text-center">
+                                    <span style="padding-right: 1px !important; padding-top: 1px !important" *ngFor="let fps of lstFormasPago">
+                                        <button class="btn btn-sm btn-outline-primary" style="font-weight: bold;" (click)="addFormaPago(fps)" [disabled]="+saldocomanda == 0">
+                                            {{fps.descripcion}}
+                                        </button>
+                                    </span>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr *ngFor="let dcc of detallescobcom; let i = index">
+                        <td *ngIf="dcc.detcobro.length > 0">
+                            <table style="width: 100%; border-collapse:collapse">
+                                <tr>
+                                    <td colspan="7">
+                                        <strong>{{dcc.descripcion}}</strong>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="dcc.estarjeta">
+                                    <th colspan="4" class="small font-weight-bold"></th>
+                                    <th colspan="2" class="small font-weight-bold text-center">Vencimiento</th>                                    
+                                    <th class="small font-weight-bold"></th>
+                                </tr>
+                                <tr>
+                                    <th class="small font-weight-bold">Monto</th>
+                                    <th class="small font-weight-bold">%</th>                                    
+                                    <th class="small font-weight-bold" *ngIf="!dcc.estarjeta && !dcc.condocumento && !dcc.escortesia">Vuelto para</th>
+                                    <th class="small font-weight-bold" *ngIf="!dcc.estarjeta && !dcc.condocumento && !dcc.escortesia">Vuelto</th>                                    
+                                    <th class="small font-weight-bold" *ngIf="dcc.estarjeta">Emisor</th>
+                                    <th class="small font-weight-bold" *ngIf="dcc.estarjeta">No.</th>
+                                    <th class="small font-weight-bold" *ngIf="dcc.estarjeta">Mes</th>
+                                    <th class="small font-weight-bold" *ngIf="dcc.estarjeta">Año</th>
+                                    <th class="small font-weight-bold" *ngIf="dcc.estarjeta">Nombre</th>
+                                </tr>                                
+                                <tr *ngFor="let detc of dcc.detcobro; let j = index">
+                                    <td>                                        
+                                        <input type="number" #txtMonto="ngModel" [(ngModel)]="detc.monto" id="txtMonto_{{j}}" name="txtMonto_{{j}}" class="form-control form-control-sm" 
+                                            (change)="recalcPorcentaje(txtMonto, txtPorcentaje, i, j)" (blur)="recalcPorcentaje(txtMonto, txtPorcentaje, i, j)" 
+                                            placeholder="Monto" [style.width]="detc.estarjeta ? '90px' : ''"/>
+                                    </td>
+                                    <td>
+                                        <input type="number" #txtPorcentaje="ngModel" [(ngModel)]="detc.porcentaje" id="txtPorcentaje_{{j}}" name="txtPorcentaje_{{j}}" class="form-control form-control-sm" 
+                                            (change)="recalcMonto(txtMonto, txtPorcentaje, i, j)" (blur)="recalcMonto(txtMonto, txtPorcentaje, i, j)" placeholder="Porcentaje del monto" 
+                                            max="100.00" [style.width]="detc.estarjeta ? '75px' : ''"/>
+                                    </td>
+                                    <!-- Inicia columnas para cuando es efectivo -->
+                                    <td *ngIf="!detc.estarjeta && !detc.condocumento && !detc.escortesia">
+                                        <input type="text" #vueltoPara="ngModel" [(ngModel)]="detc.vueltopara" id="selVlt_{{j}}" name="selVlt_{{j}}"
+                                            class="form-control form-control-sm" (change)="calcVuelto(i, j)" placeholder="Vuelto para"/>
+                                        <!--    
+                                        <select name="selVlt_{{j}}" id="selVlt_{{j}}" [(ngModel)]="detc.vueltopara" class="form-control form-control-sm" #vueltoPara
+                                            [required]="!detc.estarjeta && !detc.condocumento && !detc.escortesia" (change)="calcVuelto(i, j)">
+                                            <option *ngFor="let v of vlts" value="{{v.valor}}">{{v.descripcion}}</option>
+                                        </select>
+                                        -->
+                                    </td>
+                                    <td [colSpan]="!detc.estarjeta && !detc.condocumento && !detc.escortesia ? 3 : 1" *ngIf="!detc.estarjeta && !detc.condocumento && !detc.escortesia">
+                                        <input type="number" #txtVuelto="ngModel" [(ngModel)]="detc.vuelto" id="txtVuelto_{{j}}" name="txtVuelto_{{j}}" class="form-control form-control-sm"
+                                            placeholder="Vuelto" disabled="true"/>
+                                    </td>
+                                    <!-- Fin de columnas para cuando es efectivo -->
+                                    <!--Inicia columnas para cuando es tarjeta-->
+                                    <td *ngIf="detc.estarjeta">                                        
+                                        <select name="selEmisor_{{j}}" id="selEmisor_{{j}}" [(ngModel)]="detc.idemisor" class="form-control form-control-sm" #selEmisor 
+                                            style="width: 100%" [required]="detc.estarjeta">
+                                            <option *ngFor="let etcd of lstEmisoresTarjeta" value="{{etcd._id}}">{{etcd.nombre}}</option>
+                                        </select>
+                                    </td>
+                                    <td *ngIf="detc.estarjeta">                                        
+                                        <input type="number" #txtNumT="ngModel" [(ngModel)]="detc.numero" id="txtNumT_{{j}}" name="txtNumT_{{j}}" class="form-control form-control-sm" 
+                                            style="width: 170px" placeholder="No. de tarjeta" [required]="detc.estarjeta" (keyup)="checkLength(detc)"/>
+                                    </td>
+                                    <td *ngIf="detc.estarjeta">                                        
+                                        <input type="number" #txtMesVT="ngModel" [(ngModel)]="detc.mesvence" id="txtMesVT_{{j}}" name="txtMesVT_{{j}}" class="form-control form-control-sm"
+                                            placeholder="Mes" min="1" max="12" [required]="detc.estarjeta"/>
+                                    </td>
+                                    <td *ngIf="detc.estarjeta">                                        
+                                        <input type="number" #txtAnioVT="ngModel" [(ngModel)]="detc.aniovence" id="txtAnioVT_{{j}}" name="txtAnioVT_{{j}}" class="form-control form-control-sm"
+                                            placeholder="Año" [required]="detc.estarjeta" min="0" max="99"/>
+                                    </td>
+                                    <td *ngIf="detc.estarjeta">
+                                        <input type="Text" #txtNomT="ngModel" [(ngModel)]="detc.nombretarjeta" id="txtNomT_{{j}}" name="txtNomT_{{j}}" class="form-control form-control-sm"
+                                            placeholder="Nombre en tarjeta" [required]="detc.estarjeta" />
+                                    </td>
+                                    <td class="text-nowrap">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="addDetTarjeta(i, j)" *ngIf="j == 0 && detc.estarjeta" [disabled]="+saldocomanda == 0">
+                                            <span class="oi oi-plus" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" (click)="delDetTarjeta(i, j)">
+                                            <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                    <!--Fin de columnas para cuando es tarjeta-->
+                                    <!-- Cuando es con documento -->
+                                    <td *ngIf="detc.condocumento">
+                                        <input type="text" #txtNoDoc="ngModel" [(ngModel)]="detc.numdocumento" id="txtNoDoc_{{j}}" name="txtNoDoc_{{j}}" class="form-control form-control-sm"
+                                            placeholder="No. de documento" [required]="detc.condocumento" minlength="1" />
+                                    </td>
+                                    <!-- Fin de cuando es con documento -->
+                                    <!--Cuando es cortesía-->
+                                    <td *ngIf="detc.escortesia">
+                                        <input type="text" #txtNoDoc="ngModel" [(ngModel)]="detc.aprobadopor" id="txtNoDoc_{{j}}" name="txtNoDoc_{{j}}" class="form-control form-control-sm"
+                                            placeholder="Aprobado por" [required]="detc.escortesia" minlength="1" />
+                                    </td>
+                                    <!--Fin de cuando es cortesía-->
+                                </tr>
+                            </table>                            
+                        </td>
+                    </tr>
+                </table>                
+            </div>
+        </div>
+        <div class="card" *ngIf="false">
+            <div class="card-body" style="height: 250px; overflow-y:auto; padding: 0.2em !important; ">
+                <div class="row">
+                    <div class="col-6" style="padding: 0 !important;">                        
+                        <div class="card-header font-weight-bold">¿A quién facturar?</div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" *ngFor="let dfact of datosfactCliente" (click)="addFacturarA(dfact)">
+                                <!-- [style.pointer-events]="+saldofacta == 0 ? 'none' : 'auto'" -->
+                                <span class="font-weight-bold">{{dfact.nombre}}</span> / <span>{{dfact.nit}}</span><br/>
+                                <small>
+                                    <span>{{dfact.direccion}}</span>
+                                </small>                                    
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-6" style="padding-top: 0 !important; padding-bottom: 0 !important; padding-left: 0 !important;">
+                        <div class="card-header font-weight-bold">Facturar a</div>
+                        <table class="table table-hover table-sm">
+                            <tr *ngFor="let dfc of comanda.detfacturara; let i = index">
+                                <td>{{dfc.nombre}}</td>
+                                <td>{{dfc.nit}}</td>
+                                <td>
+                                    <input type="number" #txtMontoFA="ngModel" [(ngModel)]="dfc.monto" id="txtMontoFA_{{i}}" name="txtMontoFA_{{i}}" class="form-control form-control-sm" 
+                                        (change)="recalcSaldoFactA()" (blur)="recalcSaldoFactA()" placeholder="Monto" disabled="true"/>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="delDetFactA(i)">
+                                        <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <table style="width: 100%; border-collapse:collapse">
+            <tr>
+                <td class="font-weight-bold text-right" [style.color]="+saldocomanda == 0 ? '#58FA58': '#FA5858'">
+                    Saldo pendiente de pedido:
+                </td>
+                <td class="font-weight-bold text-right" [style.color]="+saldocomanda == 0 ? '#58FA58': '#FA5858'">
+                    {{saldocomanda | number:'1.2-2'}}
+                </td>
+                <!--
+                <td class="font-weight-bold text-right" [style.color]="+saldofacta == 0 ? '#58FA58': '#FA5858'">
+                    Saldo pendiente de facturar a:
+                </td>
+                <td class="font-weight-bold text-right" [style.color]="+saldofacta == 0 ? '#58FA58': '#FA5858'">
+                    {{saldofacta | number:'1.2-2'}}
+                </td>
+                -->
+                <td class="text-right">
+                    <button type="button" class="btn btn-outline-dark" (click)="c('Terminar pedido.')" [disabled]="+saldocomanda > 0">Terminar pedido</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</ng-template>
+<ng-template #modalConfirmEnd let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Terminar pedido</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="text-center">
+            <span class="font-weight-bold">¿Seguro(a) de finalizar el pedido?</span>
+        </div>        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="d('Cancelar')">Cancelar</button>
+        <button type="button" class="btn btn-outline-success" (click)="c('Terminar')">Aceptar</button>
+    </div>
+</ng-template>
+<ng-template #modalSelFacturarA let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">¿A quién desea facturar?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="padding: 0 !important; ">
+                <table class="table table-hover table-sm table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input name="txtNomFact" id="txtNomFact" type="text" class="form-control form-control-sm" #nombreFacturaCliente="ngModel"
+                                    [(ngModel)]="datofactClienteObj.nombre" placeholder="Nombre" />
+                            </td>
+                            <td>
+                                <input name="txtNit" id="txtNit" type="text" class="form-control form-control-sm" #nitCliente="ngModel" [(ngModel)]="datofactClienteObj.nit"
+                                    placeholder="N.I.T." />
+                            </td>
+                            <td>
+                                <input name="txtDirFact" id="txtDirFact" type="text" class="form-control form-control-sm" #direccionFacturaCliente="ngModel"
+                                    [(ngModel)]="datofactClienteObj.direccion" placeholder="Dirección" />
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="nuevoFacturarA(); c(null);">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngFor="let fa of datosfactCliente" (click)="c(fa)">
+                            <td>{{fa.nombre}}</td>
+                            <td>{{fa.nit}}</td>
+                            <td>{{fa.direccion}}</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<ng-template #modalSelTelefono let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">¿Qué teléfono desea usar?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body" style="padding: 0 !important; ">
+                <table class="table table-hover table-sm table-bordered">
+                    <tbody>                        
+                        <tr>
+                            <td>
+                                <input name="txtTelCli" id="txtTelCli" type="text" class="form-control form-control-sm" #telCliObj="ngModel"
+                                    [(ngModel)]="telCli.telefono" placeholder="Teléfono" />
+                            </td>                            
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-sm" (click)="nuevoTelCli(); c(null);" [disabled]="!telCli.telefono">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                            </td>
+                        </tr>                        
+                        <tr *ngFor="let tel of telefonosCliente" (click)="c(tel)">
+                            <td colspan="2">{{tel.telefono}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>

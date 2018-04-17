@@ -1,0 +1,40 @@
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header"><h5>Reporte de ventas</h5></div>
+        <div class="card-body">
+            <form #frmParams="ngForm">
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="txtFDel">Del:</label>
+                            <input name="txtFDel" id="txtFDel" type="date" class="form-control form-control-sm" #fDel="ngModel" [(ngModel)]="params.fdel" placeholder="Del" required/>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="txtFAl">Al:</label>
+                            <input name="txtFAl" id="txtFAl" type="date" class="form-control form-control-sm" #fAl="ngModel" [(ngModel)]="params.fal" placeholder="Al" required/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="selReporte">Por:</label>
+                            <select name="selReporte" id="selReporte" class="form-control form-control-sm" #tipoReporte="ngModel"
+                                [(ngModel)]="reporte" required>
+                                <option value="SJRw1w88f">Operador</option>
+                                <option value="r1ECnJdUG">Restaurante</option>
+                                <option value="ryBWglOLf">Tipo de pedido</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-sm justify-content-end">
+                    <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmParams.form.valid" (click)="getReporte()">
+                        <span class="oi oi-print" title="Generar" aria-hidden="true"></span>
+                    </button>                    
+                </div>
+            </form>
+        </div>
+    </div>
+    <app-rpt-visor-pdf [content]="content"></app-rpt-visor-pdf>
+</div>

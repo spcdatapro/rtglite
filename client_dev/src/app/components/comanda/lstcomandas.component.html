@@ -1,0 +1,371 @@
+<div class="container-fluid" style="margin-top: 10px">
+    <div class="row">
+        <div class="col-3">
+            <input id="srchCli" type="text" class="form-control" minlength="8" maxlength="8" pattern="[0-9]+" (keyup.enter)="buscarCliente(modalSelCliente, modalNuevoCliente)" 
+                #srchCli="ngModel" [(ngModel)]="telABuscar" placeholder="Teléfono del cliente..."/>
+        </div>
+    </div>    
+    <hr/>
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <span style="padding-right: 2px !important" *ngFor="let cnt of contadores">
+                    <button type="button" class="btn" [style.background-color]="cnt._id.color" style="color: lightgray; font-weight: bold" (click)="loadComandasEnhanced(cnt._id._id)">
+                        {{cnt._id.descripcion}}
+                        <span class="badge badge-dark badge-pill">{{cnt.count}}</span>
+                    </button>
+                </span>
+                <span style="padding-right: 2px !important">
+                    <button type="button" class="btn btn-primary" style="color: lightgray; font-weight: bold" (click)="loadComandasEnhanced()" *ngIf="contadores.length > 0">
+                        Todas
+                    </button>
+                </span>
+            </div>            
+        </div>
+    </div>
+    <div class="row justify-content-center" style="padding-top: 10px;">
+        <div class="col-5">
+            <input type="text" class="form-control" #fltrCliente="ngModel" [(ngModel)]="filtroCliente"
+                [ngModelOptions]="{standalone: true}" placeholder="Buscar comanda por nombre de cliente..." />
+        </div>
+        <div class="col-1 text-right font-weight-bold">Del:</div>
+        <div class="col-2">
+            <input type="date" class="form-control" #fltrFDel="ngModel" [(ngModel)]="fdel" [ngModelOptions]="{standalone: true}" placeholder="Del" required/>
+        </div>
+        <div class="col-1 text-right font-weight-bold">Al:</div>
+        <div class="col-3">
+            <div class="input-group">
+                <input type="date" class="form-control" #fltrFAl="ngModel" [(ngModel)]="fal" [ngModelOptions]="{standalone: true}" placeholder="Al" required/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-secondary" (click)="loadComandasEnhanced(); loadContadores()">
+                        <span class="oi oi-magnifying-glass" title="Filtrar por fechas" aria-hidden="true"></span>
+                    </button>
+                </span>
+            </div>            
+        </div>
+    </div>
+    <hr/>
+    <div class="row" *ngFor="let cmd of listaComandas | filterList:'idcliente.nombre':filtroCliente; let i = index">
+        <div class="col-2">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td>
+                        <span class="font-weight-bold" style="font-size: 1.5em !important;">
+                             {{cmd.fechafintoma | date:'HH:mm:ss'}}
+                        </span>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{cmd.fechafintoma | date:'dd/MM/yyyy'}}</td>
+                </tr>
+                <tr>
+                    <td>                        
+                        <img class="rounded" src="../../../assets/{{cmd.idtipocomanda.imagen}}" alt="{{cmd.idtipocomanda.descripcion}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-center font-weight-bold" style="padding-top: 1em; font-size: 1.25em">
+                        Total: Q {{cmd.totalcomanda | number:'1.2-2'}}<br/>
+                        <img class="rounded" *ngFor="let ifp of cmd.imgpago" src="../../../assets/{{ifp}}.png" alt="FP">
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-10">            
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td colspan="2">
+                        <h4>
+                            Orden No. {{cmd.tracking | number:'1.0-0'}} a nombre de {{cmd.idcliente.nombre}}&nbsp;
+                            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="verDetCobro(cmd, modalDetCobroComanda)">Detalle de cobro</button>
+                        </h4>                        
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="vertical-align: top">Transcurrido:</td>
+                    <td style="padding-left: 0.15em; vertical-align: top; font-weight: bold;">{{cmd.fechafintoma | amTimeAgo:true}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="vertical-align: top">Teléfono:</td>
+                    <td style="padding-left: 0.15em; vertical-align: top;">{{cmd.idtelefonocliente.telefono}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="vertical-align: top;">Atendió:</td>
+                    <td style="padding-left: 0.15em; vertical-align: top;">{{cmd.idusuario.nombre}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="vertical-align: top;">Entregar en:</td>
+                    <td style="padding-left: 0.15em; vertical-align: top;">
+                         {{cmd.iddireccioncliente.direccion}}, zona {{cmd.iddireccioncliente.zona}}, colonia {{cmd.iddireccioncliente.colonia}} 
+                         {{cmd.iddireccioncliente.codigoacceso ? (', código de acceso: ' + cmd.iddireccioncliente.codigoacceso) : ''}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="vertical-align: top;">Restaurante:</td>
+                    <td style="padding-left: 0.15em; vertical-align: top;">
+                        {{cmd.idrestaurante ? cmd.idrestaurante.nombre : cmd.iddireccioncliente.idrestaurante.nombre}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="vertical-align: top;">Tiempo ofrecido:</td>
+                    <td style="padding-left: 0.15em; vertical-align: top;">
+                        {{cmd.idtiempoentrega ? cmd.idtiempoentrega.tiempo : ''}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="vertical-align: top;">Motorista:</td>
+                    <td style="padding-left: 0.15em; vertical-align: top;">{{cmd.idmotorista ? cmd.idmotorista.nombre : ''}}</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" style="vertical-align: top;">Observaciones:</td>
+                    <td style="padding-left: 0.15em; vertical-align: top;">
+                        <p>{{cmd.notas || 'No tiene'}}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold" colspan="2" [style.color]="cmd.idestatuscomanda.color">
+                        <h3>{{cmd.idestatuscomanda.descripcion}}</h3>
+                    </td>                    
+                </tr>
+                <tr>
+                    <td colspan="2">                        
+                        <table style="width: 100%; border-collapse:collapse; border: solid 0.1em lightgray">
+                            <tr style="background-color: #FFFEE0" *ngFor="let det of cmd.detallecomanda">
+                                <td>                                   
+                                    <table style="width: 100%; border-collapse:collapse;">
+                                        <tr>                                            
+                                            <td>                                                
+                                                <table style="width: 100%; border-collapse: collapse;">
+                                                    <tr>
+                                                        <td class="align-top">{{det.cantidad}} {{det.descripcion}}</td>
+                                                    </tr>
+                                                    <tr *ngFor="let dce of det.extrasnotas">
+                                                        <td class="align-top" style="padding-left: 2em;">
+                                                            <span *ngIf="dce.esextra">
+                                                                <strong style="font-size: 12pt">+</strong> {{dce.descripcion}}</span>
+                                                            <p *ngIf="!dce.esextra">
+                                                                <strong>N:</strong> {{dce.notas}}</p>
+                                                        </td>                                                        
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr *ngFor="let compo of det.componentes">
+                                            <td style="padding-left: 2em">
+                                                <table style="width: 100%; border-collapse:collapse;">
+                                                    <tr>
+                                                        <td>{{compo.descripcion}}</td>                                                        
+                                                    </tr>
+                                                    <tr *ngFor="let ext of compo.extrasnotas">
+                                                        <td style="padding-left: 1em">
+                                                            <span *ngIf="ext.esextra">
+                                                                <strong style="font-size: 12pt">+</strong> {{ext.descripcion}}
+                                                            </span>
+                                                            <p *ngIf="!ext.esextra">
+                                                                <strong>N:</strong> {{ext.notas}}
+                                                            </p>
+                                                        </td>                                                        
+                                                    </tr>
+                                                </table>                                                
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>                                
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+<ng-template #modalSelCliente let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">¿Quién está llamando?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <ul class="list-group list-group-flush">                 
+                <li class="list-group-item" *ngFor="let cli of listaClientes" (click)="c(cli._id)">{{cli.nombre}}</li>
+            </ul>
+        </div>
+    </div>    
+</ng-template>
+<ng-template #modalDetCobroComanda let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Detalles de cobro</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="height: 700px; overflow-y:auto">
+        <table class="table table-hover table-sm table-striped">
+            <thead>
+                <tr>
+                    <th colspan="3">Formas de pago</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th class="text-right" colspan="2">Total de comanda:</th>
+                    <th class="text-right" style="border-bottom: double 0.25em lightgray !important;">{{comandaSelected.totalcomanda | number:'1.2-2'}}</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr *ngFor="let fp of resumenCobro">
+                    <td>
+                        <img class="rounded" src="{{fp.imagen}}" alt="{{fp.descripcion}}">
+                    </td>
+                    <td>{{fp.descripcion}}</td>
+                    <td class="text-right">{{fp.monto | number:'1.2-2'}}</td>
+                </tr>                
+            </tbody>
+        </table>
+        <hr/>
+        <table class="table table-hover table-sm table-striped">
+            <thead>
+                <tr>
+                    <th colspan="3">Facturar a</th>
+                </tr>
+                <tr>
+                    <th>N.I.T.</th>
+                    <th>Nombre</th>
+                    <th class="text-right">Monto</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th colspan="2" class="text-right">Total de comanda:</th>
+                    <th class="text-right" style="border-bottom: double 0.25em lightgray !important;">{{comandaSelected.totalcomanda | number:'1.2-2'}}</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                <tr *ngFor="let facta of comandaSelected.detfacturara">
+                    <td>{{facta.nit}}</td>
+                    <td>{{facta.nombre}}</td>
+                    <td class="text-right">{{facta.monto | number:'1.2-2'}}</td>
+                </tr>                
+            </tbody>
+        </table>
+    </div>
+</ng-template>
+<ng-template #modalNuevoCliente let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Datos de cliente</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-header">Nombre y teléfono:</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-8">
+                        <input id="txtNombreCliente" name="txtNombreCliente" #nombreCliente="ngModel" [(ngModel)]="clienteNuevo.nombre" type="text"
+                            class="form-control form-control-sm" placeholder="Nombre" />
+                    </div>
+                    <div class="col-4">
+                        <input id="txtTelefonoCliente" name="txtTelefonoCliente" #telefonoCliente="ngModel" [(ngModel)]="telefonoNuevo.telefono"
+                            type="text" minlength="8" maxlength="8" class="form-control form-control-sm" placeholder="Teléfono"/>
+                    </div>
+                </div>
+                
+            </div>
+        </div>        
+        <div class="card">
+            <div class="card-header">Dirección:</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="txtDirCli">Dirección:</label>
+                            <input name="txtDirCli" id="txtDirCli" type="text" class="form-control form-control-sm" #direccionCliente="ngModel" [(ngModel)]="direccionNueva.direccion"
+                                placeholder="Dirección" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="txtZonaCli">Zona:</label>
+                            <input name="txtZonaCli" id="txtZonaCli" type="number" class="form-control form-control-sm" #zonaCliente="ngModel" [(ngModel)]="direccionNueva.zona"
+                                placeholder="Zona" min="0" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="txtColoniaCli">Colonia:</label>
+                            <input name="txtColoniaCli" id="txtColoniaCli" type="text" class="form-control form-control-sm" #coloniaCliente="ngModel"
+                                [(ngModel)]="direccionNueva.colonia" placeholder="Colonia" />
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="txtCodAccCli">Código de acceso:</label>
+                            <input name="txtCodAccCli" id="txtCodAccCli" type="text" class="form-control form-control-sm" #codigoaccesoCliente="ngModel"
+                                [(ngModel)]="direccionNueva.codigoacceso" placeholder="Código de acceso" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="selTipoDirCli">Tipo de dirección:</label>
+                            <select name="selTipoDirCli" id="selTipoDirCli" class="form-control form-control-sm" #tipoDireccionCliente="ngModel"
+                                [(ngModel)]="direccionNueva.idtipodireccion">
+                                <option *ngFor="let td of tiposDireccion" [ngValue]="td._id">{{td.descripcion}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="selRestCli">Atiende:</label>
+                            <select name="selRestCli" id="selRestCli" class="form-control form-control-sm" #restauranteCliente="ngModel" [(ngModel)]="direccionNueva.idrestaurante">
+                                <option *ngFor="let rest of restaurantes" [ngValue]="rest._id">{{rest.nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Datos de facturación:</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="txtNit">N.I.T.:</label>
+                            <input name="txtNit" id="txtNit" type="text" class="form-control form-control-sm" #nitCliente="ngModel"
+                                [(ngModel)]="facturaNueva.nit" placeholder="N.I.T."/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="txtNomFact">Nombre:</label>
+                            <input name="txtNomFact" id="txtNomFact" type="text" class="form-control form-control-sm" #nombreFacturaCliente="ngModel"
+                                [(ngModel)]="facturaNueva.nombre" placeholder="Nombre"/>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="txtDirFact">Dirección:</label>
+                            <input name="txtDirFact" id="txtDirFact" type="text" class="form-control form-control-sm" #direccionFacturaCliente="ngModel"
+                                [(ngModel)]="facturaNueva.direccion" placeholder="Dirección"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer justify-content-end">
+        <div class="btn-group-sm">
+            <button type="button" class="btn btn-sm btn-outline-warning" (click)="d('')">Cancelar</button>
+            <button type="button" class="btn btn-sm btn-outline-success" (click)="c('')">Guardar y continuar...</button>
+        </div>
+    </div>
+</ng-template>
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>

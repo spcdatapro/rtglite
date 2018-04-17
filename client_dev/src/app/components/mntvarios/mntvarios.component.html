@@ -1,0 +1,544 @@
+<div class="container-fluid">
+    <ngb-tabset>
+        <ngb-tab title="Restaurantes">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmRestaurante="ngForm" (ngSubmit)="onSubmitRest()" class="form-inline">
+                                    <input name="txtNomRest" id="txtNomRest" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 50%" 
+                                        #nombreRest="ngModel" [(ngModel)]="restaurante.nombre" placeholder="Nombre del restaurante" required [disabled]="restaurante.debaja" />                                    
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmRestaurante.form.valid || restaurante.debaja" *ngIf="!restaurante._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmRestaurante.form.valid || restaurante.debaja" *ngIf="restaurante._id" (click)="updRestaurante()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="restaurante.debaja" *ngIf="restaurante._id" (click)="delRestaurante()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="restaurante._id" (click)="nuevoRestaurante()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>De baja</th>                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let r of restaurantes" (click)="getRestaurante(r._id)">
+                            <td>{{r.nombre}}</td>
+                            <td>{{r.debaja ? 'Sí' : ''}}</td>                            
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Tipos de dirección">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmTipoDir="ngForm" (ngSubmit)="onSubmitTipoDireccion()" class="form-inline">
+                                    <input name="txtDescTDir" id="txtDescTDir" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 50%" 
+                                        #tipoDir="ngModel" [(ngModel)]="tipoDireccion.descripcion" placeholder="Descripción del tipo de dirección" required [disabled]="tipoDireccion.debaja" />
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmTipoDir.form.valid || tipoDireccion.debaja" *ngIf="!tipoDireccion._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmTipoDir.form.valid || tipoDireccion.debaja" *ngIf="tipoDireccion._id" (click)="updTipoDireccion()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="tipoDireccion.debaja" *ngIf="tipoDireccion._id" (click)="delTipoDireccion()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="tipoDireccion._id" (click)="nuevoTipoDireccion()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let td of tiposDireccion" (click)="getTipoDireccion(td._id)">
+                            <td>{{td.descripcion}}</td>
+                            <td>{{td.debaja ? 'Sí' : ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Componentes">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmCompo="ngForm" (ngSubmit)="onSubmitComponente()" class="form-inline">
+                                    <input name="txtDescCompo" id="txtDescCompo" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 50%"
+                                        #compoDesc="ngModel" [(ngModel)]="compo.descripcion" placeholder="Descripción del componente"
+                                        required [disabled]="compo.debaja" />
+                                    <div class="col-auto">
+                                        <div class="form-check mb-2 mb-sm-0">
+                                            <label class="form-check-label">
+                                                <input name="chkComoExt" id="chkComoExt" type="checkbox" class="form-check-input" #comoExtraMnu="ngModel" [(ngModel)]="compo.comoextra" [disabled]="compo.debaja"/> Como extra
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="form-check mb-2 mb-sm-0">
+                                            <label class="form-check-label">
+                                                <input name="chkSeCobra" id="chkSeCobra" type="checkbox" class="form-check-input" #seCobra="ngModel" [(ngModel)]="compo.secobra"
+                                                    [disabled]="compo.debaja" /> ¿Se cobra?
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmCompo.form.valid || compo.debaja" *ngIf="!compo._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmCompo.form.valid || compo.debaja" *ngIf="compo._id"
+                                            (click)="updComponente()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="compo.debaja" *ngIf="compo._id" (click)="delComponente()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="compo._id" (click)="nuevoComponente()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Como extra</th>
+                            <th>¿Se cobra?</th>
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cmp of compos" (click)="getComponente(cmp._id)">
+                            <td>{{cmp.descripcion}}</td>
+                            <td>{{cmp.comoextra ? 'Sí' : ''}}</td>
+                            <td>{{cmp.secobra ? 'Sí' : ''}}</td>
+                            <td>{{cmp.debaja ? 'Sí' : ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Formas de pago">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmFP="ngForm" (ngSubmit)="onSubmitFormaPago()" class="form-inline">
+                                    <input name="txtDescFP" id="txtDescFP" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 30%"
+                                        #fPDesc="ngModel" [(ngModel)]="formaPago.descripcion" placeholder="Descripción de la forma de pago"
+                                        required [disabled]="formaPago.debaja" />
+                                    <input name="txtOrdenFP" id="txtOrdenFP" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 10%"
+                                        #fpOrden="ngModel" [(ngModel)]="formaPago.orden" placeholder="Orden" required [disabled]="formaPago.debaja"/>
+                                    <div class="col-auto">
+                                        <div class="form-check mb-2 mb-sm-0">
+                                            <label class="form-check-label">
+                                                <input name="chkEsTFP" id="chkEsTFP" type="checkbox" class="form-check-input" #fpT="ngModel" [(ngModel)]="formaPago.estarjeta" 
+                                                    [disabled]="formaPago.debaja"/> Es tarjeta
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="form-check mb-2 mb-sm-0">
+                                            <label class="form-check-label">
+                                                <input name="chkEsCort" id="chkEsCort" type="checkbox" class="form-check-input" #esCort="ngModel" [(ngModel)]="formaPago.escortesia"
+                                                    [disabled]="formaPago.debaja"/> Es cortesia
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="form-check mb-2 mb-sm-0">
+                                            <label class="form-check-label">
+                                                <input name="chkEsConDoc" id="chkEsConDoc" type="checkbox" class="form-check-input" #esConDoc="ngModel" [(ngModel)]="formaPago.condocumento"
+                                                    [disabled]="formaPago.debaja" /> Con documento
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmFP.form.valid || formaPago.debaja" *ngIf="!formaPago._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmFP.form.valid || formaPago.debaja" *ngIf="formaPago._id" (click)="updFormaPago()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="formaPago.debaja" *ngIf="formaPago._id" (click)="delFormaPago()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="formaPago._id" (click)="nuevaFormaPago()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Orden</th>
+                            <th>Tarjeta</th>
+                            <th>Cortesía</th>
+                            <th>Documento</th>
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let fp of formasPago" (click)="getFormaPago(fp._id)">
+                            <td>{{fp.descripcion}}</td>
+                            <td>{{fp.orden}}</td>
+                            <td>{{fp.estarjeta ? 'Sí' : ''}}</td>
+                            <td>{{fp.escortesia ? 'Sí' : ''}}</td>
+                            <td>{{fp.condocumento ? 'Sí' : ''}}</td>
+                            <td>{{fp.debaja ? 'Sí' : ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Emisores de tarjetas">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmET="ngForm" (ngSubmit)="onSubmitEmisorTarjeta()" class="form-inline">
+                                    <input name="txtNomET" id="txtNomET" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 50%"
+                                        #nomET="ngModel" [(ngModel)]="emisor.nombre" placeholder="Nombre del emisor de la tarjeta"
+                                        required [disabled]="emisor.debaja" />                                    
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmET.form.valid || emisor.debaja" *ngIf="!emisor._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmET.form.valid || emisor.debaja" *ngIf="emisor._id"
+                                            (click)="updEmisorTarjeta()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="emisor.debaja" *ngIf="emisor._id" (click)="delEmisorTarjeta()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="emisor._id" (click)="nuevoEmisorTarjeta()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Nombre</th>                            
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let et of emisores" (click)="getEmisorTarjeta(et._id)">
+                            <td>{{et.nombre}}</td>                            
+                            <td>{{et.debaja ? 'Sí' : ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Recordatorios al operador">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmBan="ngForm" (ngSubmit)="onSubmitBanner()" class="form-inline">
+                                    <div class="col-auto">
+                                        <div class="form-check mb-2 mb-sm-0">
+                                            <label class="form-check-label">
+                                                <input name="chkEsPermanente" id="chkEsPermanente" type="checkbox" class="form-check-input" #esPermanente="ngModel" [(ngModel)]="ban.espermanente"
+                                                    [disabled]="ban.debaja" /> Es permanente
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <input name="txtBanFDel" id="txtBanFDel" type="date" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" 
+                                        #banFDel="ngModel" [(ngModel)]="ban.fechadel" placeholder="Del" *ngIf="!ban.espermanente" [disabled]="ban.debaja" /><br *ngIf="ban.espermanente"/>
+                                    <input name="txtBanFAl" id="txtBanFAl" type="date" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" #banFAl="ngModel"
+                                        [(ngModel)]="ban.fechaal" placeholder="Al" *ngIf="!ban.espermanente" [disabled]="ban.debaja" /><br *ngIf="!ban.espermanente" />
+                                    <textarea name="txtBanStr" id="txtBanStr" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" #banStr="ngModel"
+                                        [(ngModel)]="ban.banner" placeholder="Recordatorios..." style="width: 75%" rows="2" maxlength="5000" [disabled]="ban.debaja">
+                                    </textarea>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmBan.form.valid || ban.debaja" *ngIf="!ban._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmBan.form.valid || ban.debaja" *ngIf="ban._id" (click)="updBanner()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="ban.debaja" *ngIf="ban._id" (click)="delBanner()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="ban._id" (click)="nuevoBanner()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Creado</th>
+                            <th>Permanente</th>
+                            <th>Del</th>
+                            <th>Al</th>
+                            <th>Recordatorio</th>
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let obj of bans" (click)="getBanner(obj._id)">
+                            <td>{{obj.fechacrea | date:'dd/MM/yyyy HH:mm:ss'}} por {{obj.idusrcrea.nombre}}</td>
+                            <td>{{obj.espermanente ? 'Sí': ''}}</td>
+                            <td>{{(obj.fechadel | date:'dd/MM/yyyy') || ''}}</td>
+                            <td>{{(obj.fechaal | date:'dd/MM/yyyy') || ''}}</td>
+                            <td>
+                                <p>
+                                    {{obj.banner}}
+                                </p>
+                            </td>
+                            <td>{{obj.debaja ? 'Sí': ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Vueltos">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmVlt="ngForm" (ngSubmit)="onSubmitVuelto()" class="form-inline">
+                                    <input name="txtDescV" id="txtDescV" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 50%"
+                                        #descVuelto="ngModel" [(ngModel)]="vlt.descripcion" placeholder="Descripción del vuelto" required [disabled]="vlt.debaja" />
+                                    <input name="txtValV" id="txtValV" type="number" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 25%"
+                                        #valVuelto="ngModel" [(ngModel)]="vlt.valor" placeholder="Valor del vuelto" required [disabled]="vlt.debaja"/>
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmVlt.form.valid || vlt.debaja" *ngIf="!vlt._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmVlt.form.valid || vlt.debaja" *ngIf="vlt._id" (click)="updVuelto()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="vlt.debaja" *ngIf="vlt._id" (click)="delVuelto()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="vlt._id" (click)="nuevoVuelto()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Descripción</th>
+                            <th class="text-right">Valor</th>
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let v of vlts" (click)="getVuelto(v._id)">
+                            <td>{{v.descripcion}}</td>
+                            <td class="text-right">{{v.valor | number:'1.2-2'}}</td>
+                            <td>{{v.debaja ? 'Sí' : ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Razones de cortesía">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmRCort="ngForm" (ngSubmit)="onSubmitRCort()" class="form-inline">
+                                    <input name="txtRazon" id="txtDescV" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 50%"
+                                        #razonCort="ngModel" [(ngModel)]="rcort.razon" placeholder="Razón de cortesía" required [disabled]="rcort.debaja" />
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmRCort.form.valid || rcort.debaja" *ngIf="!rcort._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmRCort.form.valid || rcort.debaja" *ngIf="rcort._id" (click)="updRCort()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="rcort.debaja" *ngIf="rcort._id" (click)="delRCort()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="rcort._id" (click)="nuevaRCort()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Razón de cortesía</th>                            
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let r of rcorts" (click)="getRCort(r._id)">
+                            <td>{{r.razon}}</td>
+                            <td>{{r.debaja ? 'Sí' : ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Tiempos de entrega">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmTE="ngForm" (ngSubmit)="onSubmitTiempoEntrega()" class="form-inline">
+                                    <input name="txtTE" id="txtTE" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 50%"
+                                        #tiempoEnt="ngModel" [(ngModel)]="tiempo.tiempo" placeholder="Tiempo de entrega" required [disabled]="tiempo.debaja"
+                                    />
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmTE.form.valid || tiempo.debaja" *ngIf="!tiempo._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmTE.form.valid || tiempo.debaja" *ngIf="tiempo._id" (click)="updTiempoEntrega()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="tiempo.debaja" *ngIf="tiempo._id" (click)="delTiempoEntrega()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="tiempo._id" (click)="nuevoTiempoEntrega()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Tiempo de entrega</th>
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let t of tiempos" (click)="getTiempoEntrega(t._id)">
+                            <td>{{t.tiempo}}</td>
+                            <td>{{t.debaja ? 'Sí' : ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Roles de usuario">
+            <ng-template ngbTabContent>
+                <table class="table table-striped table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="2">
+                                <form #frmRol="ngForm" (ngSubmit)="onSubmitRol()" class="form-inline">
+                                    <input name="txtRol" id="txtRol" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 50%" #tiempoEnt="ngModel"
+                                        [(ngModel)]="rol.descripcion" placeholder="Rol de usuario" required [disabled]="rol.debaja"
+                                    />
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmRol.form.valid || rol.debaja" *ngIf="!rol._id">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmRol.form.valid || rol.debaja" *ngIf="rol._id" (click)="updRol()">
+                                            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" [disabled]="rol.debaja" *ngIf="rol._id" (click)="delRol()">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" *ngIf="rol._id" (click)="nuevoRol()">
+                                            <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </form>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Rol de usuario</th>
+                            <th>De baja</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let rl of roles" (click)="getRol(rl._id)">
+                            <td>{{rl.descripcion}}</td>
+                            <td>{{rl.debaja ? 'Sí' : ''}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-template>
+        </ngb-tab>
+        <ngb-tab title="Presupuesto de ventas">
+        <ng-template ngbTabContent>
+            <table class="table table-striped table-hover table-sm">
+            <thead>
+                <tr>
+                <th colspan="2">
+                    <form #frmPresV="ngForm" (ngSubmit)="onSubmitPresVenta()" class="form-inline">
+                    <input name="txtMesPres" id="txtMesPres" type="number" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 20%"
+                        #mesPresupuesto="ngModel" [(ngModel)]="presventa.mes" placeholder="Mes" required [disabled]="presventa.debaja" min="1" max="12"/>
+                    <input name="txtAnioPres" id="txtAnioPres" type="number" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 20%"
+                        #anioPresupuesto="ngModel" [(ngModel)]="presventa.anio" placeholder="Año" required [disabled]="presventa.debaja" min="2017"/>
+                    <input name="txtMontoPres" id="txtMontoPres" type="number" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 20%"
+                        #montoPresupuesto="ngModel" [(ngModel)]="presventa.presupuesto" placeholder="Monto" required [disabled]="presventa.debaja"
+                    />
+                    <div class="btn-group btn-group-sm">
+                        <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmPresV.form.valid || presventa.debaja" *ngIf="!presventa._id">
+                        <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmPresV.form.valid || presventa.debaja" *ngIf="presventa._id" (click)="updPresVenta()">
+                        <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm" [disabled]="frmPresV.debaja" *ngIf="presventa._id" (click)="delPresVenta()">
+                        <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-primary btn-sm" *ngIf="presventa._id" (click)="nuevoPresVenta()">
+                        <span class="oi oi-plus" title="Nuevo" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    </form>
+                </th>
+                </tr>
+                <tr>
+                <th>Mes</th>
+                <th>Año</th>
+                <th>Monto</th>
+                <th>De baja</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let pvt of presventas" (click)="getPresVenta(pvt._id)">
+                <td>{{pvt.mes}}</td>
+                <td>{{pvt.anio | number: '1.0-0'}}</td>
+                <td>{{pvt.presupuesto | number: '1.2-2'}}</td>
+                <td>{{pvt.debaja ? 'Sí' : ''}}</td>
+                </tr>
+            </tbody>
+            </table>
+        </ng-template>
+        </ngb-tab>
+
+    </ngb-tabset>    
+</div>
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>

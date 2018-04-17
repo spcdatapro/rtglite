@@ -1,0 +1,228 @@
+<style>
+.tree {
+  width: 300px;  
+}
+
+.node-content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.node-content-wrapper {
+  flex-grow: 1;
+  position: relative;
+}
+
+.pull-right {
+  position: absolute;
+  right: 10px;
+}    
+</style>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">Carta</div>
+        <div class="card-body">
+            <ngb-tabset>
+                <ngb-tab title="Carta">
+                    <ng-template ngbTabContent>
+                        <form #frmMenuRest="ngForm" (ngSubmit)="onSubmit()">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="txtDescripcion">Descripción:</label>
+                                        <input name="txtDescripcion" id="txtDescripcion" type="text" class="form-control" placeholder="Descripción" #descrMnu="ngModel"
+                                            [(ngModel)]="mnures.descripcion" required/>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="selPadre">Padre:</label>
+                                        <select name="selPadre" id="selPadre" class="form-control" #padreMnu="ngModel" [(ngModel)]="mnures.idpadre" (ngModelChange)="setMenuData($event)">
+                                            <option *ngFor="let opc of listaCompletaMenu" [value]="opc._id">{{opc.descripcion}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="txtPrecio">Precio:</label>
+                                        <input name="txtPrecio" id="txtPrecio" type="number" class="form-control" placeholder="Precio (si aplica)" #precioMnu="ngModel"
+                                            [(ngModel)]="mnures.precio" />
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="txtPrecioExtras">Precio/extra:</label>
+                                        <input name="txtPrecioExtras" id="txtPrecioExtras" type="number" class="form-control" placeholder="Precio por extra(si aplica)" #precioExtMnu="ngModel"
+                                            [(ngModel)]="mnures.precioextra" />
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="chkConComp">Con componentes:</label>
+                                        <input name="chkConComp" id="chkConComp" type="checkbox" class="form-control" #conCompMnu="ngModel" [(ngModel)]="mnures.tienecomponentes"
+                                        />
+                                    </div>
+                                </div>                                
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="txtLimiCompo">Máximo:</label>
+                                        <input name="txtLimiCompo" id="txtLimiCompo" type="number" class="form-control" placeholder="Límite máximo de componentes..."
+                                            #limiCompoMnu="ngModel" [(ngModel)]="mnures.limitecomponentes" [disabled]="!mnures.tienecomponentes"/>
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="chkConExt">Con extras:</label>
+                                        <input name="chkConExt" id="chkConExt" type="checkbox" class="form-control" #conExtMnu="ngModel" [(ngModel)]="mnures.tieneextras"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <div class="form-group">
+                                        <label for="chkPromo">Promoción:</label>
+                                        <input name="chkPromo" id="chkPromo" type="checkbox" class="form-control" #promoMnu="ngModel" [(ngModel)]="mnures.espromocion"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col-1">
+                                    <div class="form-group">
+                                        <label for="chkDeBaja">De baja:</label>
+                                        <input name="chkDeBaja" id="chkDeBaja" type="checkbox" class="form-control" #debajaMnu="ngModel" [(ngModel)]="mnures.debaja"
+                                        />
+                                    </div>
+                                </div>                                
+                            </div>
+                            <div class="btn-group btn-group-sm">
+                                <button type="submit" class="btn btn-primary" [disabled]="!frmMenuRest.form.valid" *ngIf="!mnures._id">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-primary" [disabled]="!frmMenuRest.form.valid" *ngIf="mnures._id" (click)="updMenuRest()">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-primary" [disabled]="!frmMenuRest.form.valid" *ngIf="mnures._id && mnures.espromocion" (click)="armarPromocion(modalPromo)">
+                                    <span class="oi oi-cog" title="Armar promoción" aria-hidden="true"></span>&nbsp;Armar promoción
+                                </button>
+                            </div>
+                        </form>
+                    </ng-template>
+                </ngb-tab>
+                <ngb-tab title="Componentes de {{mnures.descripcion}}" *ngIf="mnures._id && mnures.tienecomponentes">
+                    <ng-template ngbTabContent>
+                        <hr/>
+                        <form #frmDetMenu="ngForm" (ngSubmit)="onSubmitDetalle()" class="form-inline">
+                            <select name="selCompo" id="selCompo" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #compoMenu="ngModel" style="width: 300px"
+                                [(ngModel)]="menuRestComponente.idcomponente" required>
+                                <option *ngFor="let cmp of lstComponentes" [ngValue]="cmp._id">{{cmp.descripcion}}</option>
+                            </select>
+                            <div class="btn-group btn-group-sm">
+                                <button type="submit" class="btn btn-primary btn-sm" [disabled]="!frmDetMenu.form.valid">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>                                
+                            </div>
+                        </form>
+                        <hr/>
+                        <table class="table table-sm table-striped table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Componente</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let det of lstMenuRestComponente">
+                                    <td>{{det.idcomponente.descripcion}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm" (click)="delDetalleMenu(det._id)">
+                                            <span class="oi oi-trash" title="Dar de baja" aria-hidden="true"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-template>
+                </ngb-tab>
+            </ngb-tabset>            
+        </div>
+    </div>
+    <hr/>
+    <div style="height: 700px; width: 400px;">        
+        <tree-root [nodes]="arbolMenu" [options]="options">
+            <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+                <div class="node-wrapper" [style.padding-left]="node.getNodePadding()">
+                <tree-node-expander [node]="node"></tree-node-expander>
+                <div class="node-content-wrapper"
+                    [class.node-content-wrapper-active]="node.isActive"
+                    [class.node-content-wrapper-focused]="node.isFocused"
+                    (click)="node.mouseAction('click', $event)"
+                    (dblclick)="node.mouseAction('dblClick', $event)"
+                    (contextmenu)="node.mouseAction('contextMenu', $event)"
+                    (treeDrop)="node.onDrop($event)"
+                    [treeAllowDrop]="node.allowDrop"
+                    [treeDrag]="node"
+                    [treeDragEnabled]="node.allowDrag()">
+                    <tree-node-content [node]="node" [index]="index"></tree-node-content>
+                    <button type="button" class="btn btn-primary btn-sm pull-right" (click)="getItemMenu(node.id)" style="font-size: 8pt !important;">
+                        <span class="oi oi-pencil" title="Editar {{ node.data.name }}" aria-hidden="true"></span>
+                    </button>
+                </div>
+                </div>
+            </ng-template>
+        </tree-root>
+    </div>    
+</div>
+<ng-template #modalPromo let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Armar promoción</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="height: 700px;">
+        <div class="row">
+            <div class="col-6">
+                <div class="card">
+                    <h5 class="card-header">Menú</h5>
+                    <div class="card-body" style="padding: 0 !important;">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item" *ngFor="let crt of carta">
+                                <span style="padding-right: 1px !important; padding-top: 1px !important" *ngFor="let btn of crt">
+                                    <button class="btn btn-sm btn-outline-secondary" style="font-weight: bold;" (click)="loadCarta((btn.nivel + 1), btn._id, btn)" *ngIf="!btn.espromocion">
+                                        {{btn.descripcion}}
+                                    </button>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header">Promoción</div>
+                    <div class="card-body" style="padding:0 !important;">
+                        <small>
+                            <table class="table table-striped table-hover table-sm">
+                                <tbody>
+                                    <tr *ngFor="let dp of mnures.itemspromo; let i = index">
+                                        <td>{{dp.descripcion}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-danger" style="font-size: 8pt" (click)="removeItemPromo(i)">
+                                                <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('')">Terminar y guardar</button>
+    </div>
+</ng-template>
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>

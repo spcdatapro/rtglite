@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+.rtcolors{
+    background-color: #DA332D;
+    color: #000000;    
+}
+
+.rtxt{ text-align: right !important; }
+.ltxt{ text-align: left !important; }
+.ctxt{ text-align: center !important; }
+.bld{ font-weight: bold !important; }

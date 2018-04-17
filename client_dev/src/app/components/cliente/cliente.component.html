@@ -1,0 +1,351 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <form #clienteForm="ngForm" (ngSubmit)="onSubmit()">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="txtcliente">Nombre:</label>
+                            <input name="txtCliente" id="txtCliente" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" #nombreCliente="ngModel"
+                                [(ngModel)]="cliente.nombre" placeholder="Nombre" required />
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="txtCliFCumple">Fecha de nacimiento:</label>
+                            <input name="txtCliFCumple" id="txtCliFCumple" type="date" class="form-control mb-2 mr-sm-2 mb-sm-0" #fechaCumple="ngModel"
+                                [(ngModel)]="cliente.cumpleanios" placeholder="Fecha de cumpleaños" />
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group">
+                            <label for="txtCliFCumple">E-mail:</label>
+                            <input name="txtEMail" id="txtEMail" type="email" class="form-control mb-2 mr-sm-2 mb-sm-0" #emailCliente="ngModel"
+                                [(ngModel)]="cliente.correoelectronico" placeholder="E-mail" />
+                        </div>                        
+                    </div>
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label for="chkConHijos">¿Tiene hijos?</label>
+                            <input name="chkConHijos" id="chkConHijos" type="checkbox" class="form-control mb-2 mr-sm-2 mb-sm-0" [checked]="cliente.tienehijos"
+                                (change)="cliente.tienehijos = !cliente.tienehijos" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row" *ngIf="cliente.tienehijos">
+                    <div class="col-5">
+                        <div class="form-group">
+                            <table class="table table-sm table-striped">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2">
+                                            Rango de edades de los hijos&nbsp;
+                                            <button type="button" class="btn btn-outline-primary btn-sm" (click)="nuevoRangoEdades()">
+                                                <span class="oi oi-plus" title="Nuevo rango de edades" aria-hidden="true"></span>
+                                            </button>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th>De</th>
+                                        <th>A</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let r of cliente.rangoedadeshijos; let i = index">
+                                        <td>
+                                            <input name="txtRDe_{{i}}" id="txtRDe_{{i}}" class="form-control form-control-sm" #rangoDe="ngModel"
+                                                [(ngModel)]="r.de" placeholder="De" required />
+                                        </td>
+                                        <td>
+                                            <input name="txtRA_{{i}}" id="txtRA_{{i}}" class="form-control form-control-sm" #rangoA="ngModel"
+                                                [(ngModel)]="r.a" placeholder="A" required />
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" (click)="delRangoEdad(i)">
+                                                <span class="oi oi-trash" title="Eliminar rango de edades de los hijos" aria-hidden="true"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--
+                    <div class="col-2">
+                        <div class="form-group">
+                            <label for="chkConHijos">De baja</label>
+                            <input name="chkDeBaja" id="chkDeBaja" type="checkbox" class="form-control mb-2 mr-sm-2 mb-sm-0" [checked]="cliente.debaja"
+                                (change)="cliente.debaja = !cliente.debaja" />
+                        </div>
+                    </div>
+                    -->
+                </div>
+                <div class="btn-group" role="group" aria-label="...">
+                    <button type="submit" class="btn btn-outline-primary" [disabled]="!clienteForm.form.valid" *ngIf="desdePopOver">
+                        <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="!clienteForm.form.valid" *ngIf="!desdePopOver" (click)="updCliente()">
+                        <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-outline-warning" (click)="closePopOver()" *ngIf="desdePopOver">
+                        <span class="oi oi-circle-x" title="Cancelar" aria-hidden="true"></span>
+                    </button>
+                </div>                
+            </form>
+        </div>
+    </div>
+    <hr *ngIf="!desdePopOver"/>
+    <div class="row" *ngIf="!desdePopOver">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        Teléfonos&nbsp;
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="nuevoTelefono()">
+                            <span class="oi oi-plus" title="Nuevo teléfono" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div *ngIf="editandoTelefonoCliente">
+                        <hr/>
+                        <form #frmTelCli="ngForm" (ngSubmit)="onSubmitTelCli()" class="form-inline">
+                            <input name="txtTelCli" id="txtTelCli" type="text" class="form-control mb-2 mr-sm-2 mb-sm-0 form-control-sm" style="width: 90px" 
+                                #telCliente="ngModel" [(ngModel)]="telefonoCliente.telefono" placeholder="Teléfono" required maxlength="8" minlength="8" />
+                            <div class="btn-group btn-group-sm">
+                                <button type="submit" class="btn btn-outline-primary btn-sm" [disabled]="!frmTelCli.form.valid" *ngIf="!telefonoCliente._id">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="!frmTelCli.form.valid" (click)="updTelefonoCli()" *ngIf="telefonoCliente._id">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-outline-warning btn-sm" (click)="cancelNuevoTelefono()">
+                                    <span class="oi oi-circle-x" title="Cancelar" aria-hidden="true"></span>
+                                </button>
+                            </div>                            
+                        </form>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" *ngFor="let tel of telefonosCliente">
+                        {{tel.telefono}}&nbsp;
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="getTelefonoCli(tel._id)">
+                            <span class="oi oi-pencil" title="Editar" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm" (click)="goToComandaHisto(tel.telefono)">
+                            <span class="oi oi-aperture" title="Crear comanda histórica" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" (click)="delTelefonoCli(tel._id)">
+                            <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                        </button>
+                    </li>
+                </ul>            
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        Direcciones&nbsp;
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="nuevaDireccion()">
+                            <span class="oi oi-plus" title="Nuevo teléfono" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div *ngIf="editandoDireccionCliente">
+                        <hr/>
+                        <form #frmDirCli="ngForm" (ngSubmit)="onSubmitDirCli()" class="form-inline">
+                            <input name="txtDirCli" id="txtDirCli" type="text" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #dirCli="ngModel" 
+                                [(ngModel)]="direccionCliente.direccion" placeholder="Dirección" required/>
+                            <input name="txtZonaCli" id="txtZonaCli" type="number" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #zonaCli="ngModel" 
+                                [(ngModel)]="direccionCliente.zona" placeholder="Zona" min="1" style="width: 75px" required/>
+                            <input name="txtColCli" id="txtColCli" type="text" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #colCli="ngModel" 
+                                [(ngModel)]="direccionCliente.colonia" placeholder="Colonia" style="width: 175px" required/>
+                            <input name="txtCodAccCli" id="txtCodAccCli" type="text" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #codAccCli="ngModel" 
+                                [(ngModel)]="direccionCliente.codigoacceso" placeholder="Cód. de acceso" style="width: 115px"/>
+                            <select name="selTipoDirCli" id="selTipoDirCli" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #tipoDirCli="ngModel" 
+                                [(ngModel)]="direccionCliente.idtipodireccion" required>
+                                <option *ngFor="let td of tiposDireccion" [ngValue]="td._id">{{td.descripcion}}</option>
+                            </select>
+                            <select name="selRestCli" id="selRestCli" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #restCli="ngModel" 
+                                [(ngModel)]="direccionCliente.idrestaurante" required>
+                                <option *ngFor="let rest of restaurantes" [ngValue]="rest._id">{{rest.nombre}}</option>
+                            </select>
+                            <div class="btn-group btn-group-sm">
+                                <button type="submit" class="btn btn-outline-primary btn-sm" [disabled]="!frmDirCli.form.valid" *ngIf="!direccionCliente._id">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="!frmDirCli.form.valid" *ngIf="direccionCliente._id" (click)="updDirCliente()">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-outline-warning btn-sm" (click)="cancelNuevaDireccion()">
+                                    <span class="oi oi-circle-x" title="Cancelar" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body" style="padding: 0 !important; ">
+                    <table class="table table-sm table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Dirección</th>
+                                <th>Tipo</th>
+                                <th>Atiende</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let dir of direccionesCliente">
+                                <td>
+                                    {{dir.direccion}}, zona {{dir.zona}}, colonia {{dir.colonia}}{{dir.codigoacceso && dir.codigoacceso.trim().length > 0 ? (', cód. acceso: ' + dir.codigoacceso) : ''}}
+                                </td>
+                                <td>
+                                    {{dir.idtipodireccion.descripcion}}
+                                </td>
+                                <td>
+                                    {{dir.idrestaurante.nombre}}
+                                </td>
+                                <td style="white-space:nowrap">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="getDirCliente(dir._id)">
+                                            <span class="oi oi-pencil" title="Editar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" (click)="delDirCliente(dir._id)">
+                                            <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                                        </button>
+                                    </div>                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>                   
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="row" *ngIf="!desdePopOver" style="padding-top: 15px">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        Datos de facturación&nbsp;
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="nuevoDatoFactura()">
+                            <span class="oi oi-plus" title="Nuevo dato de facturación" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div *ngIf="editandoDatoFacturaCliente">
+                        <hr/>
+                        <form #frmDatoFactCli="ngForm" (ngSubmit)="onSubmitDatoFactura()" class="form-inline">
+                            <input name="txtNit" id="txtNit" type="text" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #nitCli="ngModel"
+                                [(ngModel)]="datofactCliente.nit" placeholder="N.I.T." style="width: 125px" required/>
+                            <input name="txtNomFact" id="txtNomFact" type="text" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #nomFactCli="ngModel"
+                                [(ngModel)]="datofactCliente.nombre" placeholder="Nombre de facturación" style="width: 275px" required/>
+                            <input name="txtDirFact" id="txtDirFact" type="text" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #dirFactCli="ngModel"
+                                [(ngModel)]="datofactCliente.direccion" placeholder="Dirección de facturación" style="width: 275px" required/>
+                            <div class="btn-group btn-group-sm">
+                                <button type="submit" class="btn btn-outline-primary btn-sm" [disabled]="!frmDatoFactCli.form.valid" *ngIf="!datofactCliente._id">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-outline-primary btn-sm" [disabled]="!frmDatoFactCli.form.valid" (click)="updDatoFactura()"  *ngIf="datofactCliente._id">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-outline-warning btn-sm" (click)="cancelNuevoDatoFactura()">
+                                    <span class="oi oi-circle-x" title="Cancelar" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body" style="padding: 0 !important; ">
+                    <table class="table table-sm table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>N.I.T.</th>
+                                <th>Nombre</th>
+                                <th>Dirección</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let dfact of datosfactCliente">
+                                <td>
+                                    {{dfact.nit}}
+                                </td>
+                                <td>
+                                    {{dfact.nombre}}
+                                </td>
+                                <td>
+                                    {{dfact.direccion}}
+                                </td>
+                                <td style="white-space:nowrap">
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="getDatoFactura(dfact._id)">
+                                            <span class="oi oi-pencil" title="Editar" aria-hidden="true"></span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" (click)="delDatoFactura(dfact._id)">
+                                            <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="!desdePopOver" style="padding-top: 15px">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                         Notas del cliente&nbsp;
+                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="addNotaCliente()">
+                            <span class="oi oi-plus" title="Nueva nota" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div *ngIf="editandoNotasCliente">
+                        <hr/>
+                        <form #frmNotaCli="ngForm" (ngSubmit)="updCliente()" class="form-inline">                            
+                            <textarea name="txtNotaCli" id="txtNotaCli" class="form-control form-control-sm mb-2 mr-sm-2 mb-sm-0" #txtNotaCli="ngModel"
+                                [(ngModel)]="cliente.notascliente[cliente.notascliente.length - 1].notas" placeholder="Notas" rows="3" style="width: 80%" required></textarea>
+                            <div class="btn-group btn-group-sm">
+                                <button type="submit" class="btn btn-outline-primary btn-sm" [disabled]="!frmNotaCli.form.valid">
+                                    <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+                                </button>
+                                <button type="button" class="btn btn-outline-warning btn-sm" (click)="delNotaCliente(cliente.notascliente.length - 1)">
+                                    <span class="oi oi-circle-x" title="Cancelar" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body" style="padding: 0 !important;">
+                    <table class="table table-sm table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Nota</th>                                
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let ncli of cliente.notascliente; let i = index">
+                                <td style="width: 20%">
+                                    {{ncli.fecha | date:'dd/MM/yyyy HH:mm:ss'}}
+                                </td>
+                                <td>
+                                    <p>{{ncli.notas}}</p>                                    
+                                </td>                                
+                                <td style="width: 5%">
+                                    <button type="button" class="btn btn-outline-danger btn-sm" (click)="delNotaCliente(i)">
+                                        <span class="oi oi-trash" title="Eliminar nota" aria-hidden="true"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>

@@ -1,0 +1,47 @@
+<div class="container-fluid">
+    <table class="table table-bordered table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Ruta</th>
+                <th>Prod./Comp.</th>
+                <th>Id fox</th>
+                <th>Detalle</th>
+                <th>Power</th>
+                <th>Id partición</th>
+                <th>Id tipo precio</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let df of dictfox; let i = index">
+                <td style="white-space: nowrap;">
+                    {{df.descripcion}}
+                </td>
+                <td>{{df.idmongodb ? 'P' : 'C'}}</td>
+                <td>
+                    <input type="number" #txtIdFox="ngModel" [(ngModel)]="df.idfox" id="txtIdFox_{{i}}" name="txtIdFox_{{i}}" class="form-control form-control-sm" placeholder="Id Fox"/>
+                </td>
+                <td>
+                    <input type="number" #txtDetalle="ngModel" [(ngModel)]="df.detalle" id="txtDetalle_{{i}}" name="txtDetalle_{{i}}" class="form-control form-control-sm" 
+                        min="0" max="1" placeholder="Detalle" />
+                </td>
+                <td>
+                    <input type="number" #txtPower="ngModel" [(ngModel)]="df.power" id="txtPower_{{i}}" name="txtPower_{{i}}" class="form-control form-control-sm"
+                        min="0" max="1" placeholder="Power" />                    
+                </td>
+                <td>
+                    <input type="number" #txtIdPart="ngModel" [(ngModel)]="df.idparticion" id="txtIdPart_{{i}}" name="txtIdPart_{{i}}" class="form-control form-control-sm" placeholder="Id partición" />
+                </td>
+                <td>
+                    <input type="number" #txtIdTP="ngModel" [(ngModel)]="df.idtipoprecio" id="txtIdTP_{{i}}" name="txtIdTP_{{i}}" class="form-control form-control-sm" placeholder="Id tipo precio" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline-primary btn-sm" (click)="saveDictFox(df)">
+                        <span class="oi oi-check" title="Guardar {{df.descripcion}}" aria-hidden="true"></span>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<toaster-container [toasterconfig]="toasterconfig"></toaster-container>
