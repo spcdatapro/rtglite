@@ -138,7 +138,8 @@ export class ComandaComponent implements OnInit {
         this.direccionClienteObj = new DireccionCliente(null, null, null, null, null, null, null, null, false);
         this.carta = new Array();
         this.comanda = new Comanda(
-            null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], false
+            null, null, null, null, null, null, null, null, null, null, null,
+            null, 0, 0, [], [], [], null, null, null, null, [], null, false
         );
         this.detalleComanda = [];
         this.detcom = new DetalleComanda(null, 1, null, null, '', [], [], null, null, null, false);
@@ -484,7 +485,8 @@ export class ComandaComponent implements OnInit {
 
     cancelaPedido() {
         this.comanda = new Comanda(
-            null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], false
+            null, null, null, null, null, null, null, null, null, null,
+            null, null, 0, 0, [], [], [], null, null, null, null, [], null, false
         );
         this._router.navigate(['/comandas']);
     }
@@ -666,7 +668,7 @@ export class ComandaComponent implements OnInit {
                         itemMenu.itemspromo.forEach((ip, i) => {
                             this.detalleComanda.push(
                                 new DetalleComanda(
-                                    ip.idmenurest, ip.cantidad, (i != 0 ? 0 : precioPromo), null, ip.descripcion, [], [],
+                                    ip.idmenurest, ip.cantidad, (i !== 0 ? 0 : precioPromo), null, ip.descripcion, [], [],
                                     ip.limitecomponentes, ip.tieneextras, ip.precioextra, false
                                 )
                             );
@@ -812,8 +814,8 @@ export class ComandaComponent implements OnInit {
     }
 
     addANotaPedido(texto: string) {
-        if (texto != null && texto != undefined && texto.trim() !== '') {
-            if (this.comanda.notas == null || this.comanda.notas == undefined) { this.comanda.notas = ''; }
+        if (texto != null && texto !== undefined && texto.trim() !== '') {
+            if (this.comanda.notas == null || this.comanda.notas === undefined) { this.comanda.notas = ''; }
             if (this.comanda.notas !== '') { this.comanda.notas += '; '; }
             this.comanda.notas += texto.trim();
         }

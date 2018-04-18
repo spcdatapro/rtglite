@@ -6,20 +6,21 @@
         </div>
     </div>    
     <hr/>
-    <div class="row">
+    <div class="row" *ngIf="false">
         <div class="col-12">
-            <div>
+            <div>                
                 <span style="padding-right: 2px !important" *ngFor="let cnt of contadores">
                     <button type="button" class="btn" [style.background-color]="cnt._id.color" style="color: lightgray; font-weight: bold" (click)="loadComandasEnhanced(cnt._id._id)">
                         {{cnt._id.descripcion}}
                         <span class="badge badge-dark badge-pill">{{cnt.count}}</span>
                     </button>
                 </span>
+                
                 <span style="padding-right: 2px !important">
                     <button type="button" class="btn btn-primary" style="color: lightgray; font-weight: bold" (click)="loadComandasEnhanced()" *ngIf="contadores.length > 0">
                         Todas
                     </button>
-                </span>
+                </span>                
             </div>            
         </div>
     </div>

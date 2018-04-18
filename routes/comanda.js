@@ -8,6 +8,7 @@ var md_auth = require('../middlewares/authenticated');
 api.post('/com/c', md_auth.ensureAuth, ComandaController.crearComanda);
 api.put('/com/u/:id', md_auth.ensureAuth, ComandaController.modificarComanda);
 api.put('/com/d/:id', md_auth.ensureAuth, ComandaController.eliminarComanda);
+api.get('/com/getbytrackno/:tracking', ComandaController.getComByTrackingNo);
 api.get('/com/getcomanda/:id', md_auth.ensureAuth, ComandaController.getComanda);
 api.get('/com/lstcomandas/:fdel?/:fal?/:idestatuscomanda?/:idrestaurante?', md_auth.ensureAuth, ComandaController.listaComandas);
 api.post('/com/lstcomandas', md_auth.ensureAuth, ComandaController.listaComandasPost);

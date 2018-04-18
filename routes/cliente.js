@@ -6,11 +6,11 @@ var md_auth = require('../middlewares/authenticated');
 
 // Cliente
 api.post('/cli/c', md_auth.ensureAuth, ClienteController.crearCliente);
-api.post('/cli/cp', md_auth.ensureAuth, ClienteController.nuevoClientePaquete);
+api.post('/cli/cp', ClienteController.nuevoClientePaquete);
 api.put('/cli/u/:id', md_auth.ensureAuth, ClienteController.modificarCliente);
 api.put('/cli/d/:id', md_auth.ensureAuth, ClienteController.eliminarCliente);
 api.get('/cli/getcliente/:id', md_auth.ensureAuth, ClienteController.getClienteById);
-api.get('/cli/getclibytel/:telefono', md_auth.ensureAuth, ClienteController.getClienteByTelefono);
+api.get('/cli/getclibytel/:telefono', ClienteController.getClienteByTelefono);
 api.get('/cli/lstclientes/:page/:buscar?', md_auth.ensureAuth, ClienteController.lstClientes);
 
 //Telefonos
@@ -18,7 +18,7 @@ api.post('/cli/ctel', md_auth.ensureAuth, ClienteController.crearTelefonoCliente
 api.put('/cli/utel/:id', md_auth.ensureAuth, ClienteController.modificarTelCliente);
 api.put('/cli/dtel/:id', md_auth.ensureAuth, ClienteController.eliminarTelCliente);
 api.get('/cli/gettelscli/:idcliente', md_auth.ensureAuth, ClienteController.getTelefonosCliente);
-api.get('/cli/gettelbyidclinum/:idcliente/:telefono', md_auth.ensureAuth, ClienteController.getTelByIdClienteNumtel);
+api.get('/cli/gettelbyidclinum/:idcliente/:telefono', ClienteController.getTelByIdClienteNumtel);
 api.get('/cli/gettelcli/:id', md_auth.ensureAuth, ClienteController.getTelCliente);
 
 //Direcciones

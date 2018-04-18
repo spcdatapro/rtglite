@@ -16,6 +16,7 @@ import { ComandaService } from '../../services/comanda.service';
 import { LocalStorageService } from '../../services/localstorage.service';
 import { TipoDireccionService } from '../../services/tipodireccion.service';
 import { RestauranteService } from '../../services/restaurante.service';
+import { MintService } from '../../services/mint.service';
 import {ToasterModule, ToasterService, ToasterConfig} from 'angular2-toaster';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
@@ -31,7 +32,7 @@ import 'moment/locale/es';
     templateUrl: './lstcomandas.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [
-        ClienteService, LocalStorageService, ComandaService, TipoDireccionService, RestauranteService
+        ClienteService, LocalStorageService, ComandaService, TipoDireccionService, RestauranteService, MintService
     ],
     styles: [`.modal-size .modal-content { width: 600px }`]
 })
@@ -50,6 +51,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
     public facturaNueva: DatoFacturaCliente;
     public tiposDireccion: Array<TipoDireccion>;
     public restaurantes: Array<Restaurante>;
+    public mintOrders: Array<any>;
     private token: string;
     private toasterService: ToasterService;
     private idclienteSelected: string;
@@ -65,6 +67,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
         private _comandaService: ComandaService,
         private _tipoDireccionService: TipoDireccionService,
         private _restauranteService: RestauranteService,
+        private _mintService: MintService,
         private modalService: NgbModal,
         toasterService: ToasterService
     ) {
@@ -75,7 +78,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
         this.listaComandas = [];
         this.comandaSelected = new Comanda(
             null, null, null, null, null, null, null, null, null, null, null, null,
-            null, null, [], [], [], null, null, null, null, [], false
+            null, null, [], [], [], null, null, null, null, [], null, false
         );
         this.resumenCobro = [];
         this.contadores = [];
@@ -83,6 +86,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
         this.fdel = moment().format('YYYY-MM-DD');
         this.fal = moment().format('YYYY-MM-DD');
         this.restaurantesUsuario = [];
+        this.mintOrders = [];
     }
 
     public toasterconfig: ToasterConfig = new ToasterConfig({ positionClass: 'toast-bottom-full-width' });
@@ -107,6 +111,9 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
     }
 
     public loadComandasEnhanced(idestatus: string = '') {
+        this.mintOrders = this._mintService.listaPedidos(this.token, '0');
+        // console.log(this.mintOrders);
+        /*
         if (this.restaurantesUsuario.length > 0) { this.restaurantesUsuario = []; }
         this._ls.get('restouchusr').restaurante.forEach((rst) => { this.restaurantesUsuario.push(rst._id); });
         const parametros = {
@@ -129,6 +136,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
                 this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
             }
         );
+        */
     }
 
     public loadContadores() {
@@ -184,10 +192,10 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.loadComandasEnhanced();
-        this.loadContadores();
-        this.repetidor = Observable.interval(1000 * 45).subscribe(tick => {
+        // this.loadContadores();
+        this.repetidor = Observable.interval(1000 * 10).subscribe(tick => {
             this.loadComandasEnhanced();
-            this.loadContadores();
+            // this.loadContadores();
         });
     }
 

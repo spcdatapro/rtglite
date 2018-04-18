@@ -4,6 +4,7 @@
             <tr>
                 <th>Ruta</th>
                 <th>Prod./Comp.</th>
+                <th>Id MINT</th>
                 <th>Id fox</th>
                 <th>Detalle</th>
                 <th>Power</th>
@@ -18,6 +19,10 @@
                     {{df.descripcion}}
                 </td>
                 <td>{{df.idmongodb ? 'P' : 'C'}}</td>
+                <td>
+                    <input type="number" #txtIdMint="ngModel" [(ngModel)]="df.idmint" id="txtIdMint_{{i}}" name="txtIdMint_{{i}}" class="form-control form-control-sm"
+                        placeholder="Id MINT" />
+                </td>
                 <td>
                     <input type="number" #txtIdFox="ngModel" [(ngModel)]="df.idfox" id="txtIdFox_{{i}}" name="txtIdFox_{{i}}" class="form-control form-control-sm" placeholder="Id Fox"/>
                 </td>

@@ -4,6 +4,8 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { GLOBAL } from './global';
 
+import { Comanda } from '../models/comanda';
+
 @Injectable()
 export class ComandaService {
     public url: string;
@@ -41,6 +43,21 @@ export class ComandaService {
         return this._http.get(this.url + 'getcomanda/' + idcomanda, { headers: headers }).map(res => res.json());
     }
 
+    async getComandaByTrackingNo(trackingNo: number, token: string): Promise<any> {
+        const headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': token });
+
+        try {
+            const response = await this._http.get(this.url + 'getbytrackno/' + trackingNo, { headers: headers }).toPromise();
+            const res = response.json();
+            if (!res.lista || res.lista.length === 0) {
+                return null;
+            }
+            return res.lista[0];
+        } catch (error) {
+            await console.log('ERROR: ', error);
+        }
+    }
+
     histoComandasCliente(token, idcliente) {
         const headers = new Headers({
             'Content-Type': 'application/json',
@@ -58,6 +75,25 @@ export class ComandaService {
         });
 
         return this._http.post(this.url + 'c', params, { headers: headers }).map(res => res.json());
+    }
+
+    async crearComandaAsync(comandaNueva, token): Promise<Comanda> {
+        const params = JSON.stringify(comandaNueva);
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': token
+        });
+
+        try {
+            const response = await this._http.post(this.url + 'c', params, { headers: headers }).toPromise();
+            const res = response.json();
+            if (!res.entidad) {
+                return null;
+            }
+            return res.entidad;
+        } catch (error) {
+            await console.log('ERROR: ', error);
+        }
     }
 
     modificarComanda(comandaObj, token) {

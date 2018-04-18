@@ -11,7 +11,8 @@ var DiccionarioFoxSchema = Schema({
     detalle: Number,
     power: Number,
     idparticion: Number,
-    idtipoprecio: Number
+    idtipoprecio: Number,
+    idmint: Number
 });
 
 module.exports = mongoose.model('diccionariofox', DiccionarioFoxSchema, 'diccionariofox');

@@ -2,6 +2,7 @@
 
 // Modelos
 var DiccionarioFox = require('../models/diccionariofox');
+var Carta = require('../models/menurest');
 
 // Acciones
 function crear(req, res) {
@@ -15,6 +16,7 @@ function crear(req, res) {
     entidad.power = params.power;
     entidad.idparticion = params.idparticion;
     entidad.idtipoprecio = params.idtipoprecio;
+    entidad.idmint = params.idmint;
 
     entidad.save((err, entidadSvd) => {
         if (err) {
@@ -93,6 +95,33 @@ function getDiccionarioFox(req, res) {
     });
 }
 
+function getProductoByIdMint(req, res) {
+    var idmint = req.params.idmint;
+
+    DiccionarioFox.findOne({idmint: +idmint}, (err, entidad) => {
+        if (err) {
+            res.status(500).send({ mensaje: 'Error en el servidor al buscar el diccionario. Error: ' + err });
+        } else {
+            if (!entidad) {
+                res.status(200).send({ mensaje: 'No se pudo encontrar el diccionario.' });
+            } else {
+                Carta.findOne({_id: entidad.idmongodb}, (err2, producto) => {
+                    if (err2) {
+                        res.status(500).send({ mensaje: 'Error en el servidor al buscar el producto del diccionario. Error: ' + err2 });
+                    } else {
+                        if (!producto) {
+                            res.status(200).send({ mensaje: 'No se pudo encontrar el producto del diccionario.' });
+                        } else {
+                            producto.descripcionfull = entidad.descripcion;
+                            res.status(200).send({ mensaje: 'Producto del diccionario encontrado.', entidad: producto });
+                        }
+                    }
+                });                
+            }
+        }
+    });
+}
+
 //API para fox
 function lstdictfox(req, res) {
     DiccionarioFox.find({}, (err, res) => {
@@ -110,6 +139,7 @@ function lstdictfox(req, res) {
                     dict.power = dict.power ? dict.power : '';
                     dict.idparticion = dict.idparticion ? dict.idparticion : '';
                     dict.idtipoprecio = dict.idtipoprecio ? dict.idtipoprecio : '';
+                    dict.idmint = dict.idmint ? dict.idmint : '';
                 });
 
                 res.status(200).send({ mensaje: 'Lista de diccionarios.', lista: res });
@@ -127,6 +157,7 @@ function upddictfox(req, res) {
     body.power = parseInt(req.params.power);
     body.idparticion = parseInt(req.params.idparticion);
     body.idtipoprecio = parseInt(req.params.idtipoprecio);
+    body.idmint = parseInt(req.params.idmint);
 
     DiccionarioFox.findByIdAndUpdate(identidad, body, { new: true }, (err, entidadUpd) => {
         if (err) {
@@ -143,5 +174,5 @@ function upddictfox(req, res) {
 //Fin de API para fox
 
 module.exports = {
-    crear, modificar, eliminar, getListaDiccionarioFox, getDiccionarioFox, lstdictfox, upddictfox
+    crear, modificar, eliminar, getListaDiccionarioFox, getDiccionarioFox, lstdictfox, upddictfox, getProductoByIdMint
 }

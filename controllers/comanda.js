@@ -19,6 +19,7 @@ function crearComanda(req, res){
     var com = new Comanda();
     var params = req.body;    
 
+    com.tracking = params.tracking;
     com.idcliente = params.idcliente;
     com.idtelefonocliente = params.idtelefonocliente;
     com.iddireccioncliente = params.iddireccioncliente;    
@@ -295,6 +296,37 @@ function lstComandasCliente(req, res) {
                 }
             }
         });    
+}
+
+function getComByTrackingNo(req, res) {
+    var lst = [], noTracking = req.params.tracking, errores = [];
+
+    Comanda.find({ tracking: noTracking }, null, { sort: { fecha: 1 } })
+        .populate('idcliente', ['_id', 'nombre'])
+        .populate('idtipocomanda', ['_id', 'descripcion', 'imagen'])
+        .populate('idusuario', ['_id', 'nombre'])
+        .populate('idestatuscomanda', ['_id', 'descripcion', 'color'])
+        .populate('idtelefonocliente', ['_id', 'telefono'])
+        .populate({ path: 'iddireccioncliente', populate: { path: 'idrestaurante', select: '_id nombre' } })
+        .populate('iddatosfacturacliente', ['_id', 'nit', 'nombre', 'direccion'])
+        .populate('idtiempoentrega', ['_id', 'tiempo'])
+        .populate('idrestaurante', ['_id', 'nombre'])
+        .populate('idmotorista', ['_id', 'nombre'])
+        .exec((err, lista) => {
+            if (err) {
+                res.status(500).send({ mensaje: 'Error en el servidor al obtener la comanda.' });
+            } else {
+                if (lista.length == 0) {
+                    res.status(200).send({ mensaje: 'No se encontro la comanda del restaurante.' });
+                } else {
+                    res.status(200).send({
+                        mensaje: 'Lista de comandas.',
+                        lista: lista,
+                        errores: errores
+                    });
+                }
+            }
+        });
 }
 
 // API para FOX
@@ -1282,7 +1314,7 @@ function contadorPorEstatus(req, res) {
 }
 
 module.exports = {
-    crearComanda, modificarComanda, eliminarComanda, listaComandas, getComanda, lstComandasCliente, contadorPorEstatus, lstComandasUsuario, listaComandasPost,
+    crearComanda, modificarComanda, eliminarComanda, listaComandas, getComanda, lstComandasCliente, contadorPorEstatus, lstComandasUsuario, listaComandasPost, getComByTrackingNo, 
     // api para FOX
     listaComandasRestaurante, confirmarComanda, 
     //resetEstatusComandas, 

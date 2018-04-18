@@ -12,6 +12,7 @@ function crear(req, res){
     var params = req.body;
 
     mnu.descripcion = params.descripcion;
+    mnu.descripcionfull = params.descripcionfull;
     mnu.nivel = params.nivel;
     mnu.idpadre = params.idpadre;
     mnu.precio = params.precio;
@@ -275,7 +276,8 @@ function updDictFox(req, res) {
                                         detalle: null,
                                         power: null,
                                         idparticion: null,
-                                        idtipoprecio: null
+                                        idtipoprecio: null,
+                                        idmint: null
                                     });                                    
                                 }
                             });
@@ -311,7 +313,8 @@ function updDictFox(req, res) {
                                                             detalle: null,
                                                             power: null,
                                                             idparticion: null,
-                                                            idtipoprecio: null
+                                                            idtipoprecio: null,
+                                                            idmint: null
                                                         });                                                        
                                                     }                                                    
                                                 });

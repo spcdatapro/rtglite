@@ -4,6 +4,8 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { GLOBAL } from './global';
 
+import { MenuRestaurante } from '../models/menurest';
+
 @Injectable()
 export class DiccionarioFoxService {
     public url: string;
@@ -26,6 +28,26 @@ export class DiccionarioFoxService {
         });
 
         return this._http.get(this.url + 'getdiccf/' + identidad, { headers: headers }).map(res => res.json());
+    }
+
+    async getProductoMint(idmint: number, token: string): Promise<MenuRestaurante> {
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': token
+        });
+
+        try {
+            const response = await this._http.get(this.url + 'getprodidmint/' + idmint, { headers: headers }).toPromise();
+            const res = response.json();
+            if (!res.entidad) {
+                return null;
+            }
+            return res.entidad;
+        } catch (error) {
+            await console.log('ERROR: ', error);
+        }
+
+        // return this._http.get(this.url + 'getprodidmint/' + idmint, { headers: headers }).map(res => res.json());
     }
 
     crear(entidadNueva, token) {

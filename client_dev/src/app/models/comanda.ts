@@ -27,6 +27,7 @@ export class Comanda {
         public idmotorista: string,
         public imgpago: Array<string>,
         public bitacoraestatus: Array<BitacoraEstatus>,
+        public tracking: number,
         public debaja: boolean
     ) { }
 }

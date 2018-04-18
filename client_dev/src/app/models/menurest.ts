@@ -13,6 +13,7 @@ export class MenuRestaurante {
         public limitecomponentes: number,
         public espromocion: boolean,
         public itemspromo: Array<DetalleComanda>,
-        public debaja: boolean
+        public debaja: boolean,
+        public descripcionfull?: string
     ) {}
 }

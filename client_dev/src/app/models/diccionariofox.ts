@@ -9,5 +9,6 @@ export class DiccionarioFox {
         public power: number,
         public idparticion: number,
         public idtipoprecio: number,
+        public idmint: number
     ) { }
 }

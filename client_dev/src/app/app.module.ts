@@ -3,8 +3,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import {routing, appRoutingProviders } from './app.routing';
-import {ToasterModule, ToasterService} from 'angular2-toaster';
+import { routing, appRoutingProviders } from './app.routing';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TreeModule } from 'angular-tree-component';
 import { MomentModule } from 'angular2-moment';
@@ -25,6 +25,9 @@ import { UsuarioComponent } from './components/usuario/usuario.component';
 import { VisorPDFComponent } from './components/reportes/visorpdf.component';
 import { VentasVariosComponent } from './components/reportes/ventas/ventasvarios.component';
 
+// Servicios
+import { DiccionarioFoxService } from './services/diccionariofox.service';
+
 // Pipes
 import { FilterListPipe } from './pipes/filterlist.pipe';
 
@@ -39,7 +42,7 @@ import { FilterListPipe } from './pipes/filterlist.pipe';
     MomentModule, HttpClientModule
   ],
   providers: [
-    appRoutingProviders
+    appRoutingProviders, DiccionarioFoxService
   ],
   bootstrap: [AppComponent]
 })

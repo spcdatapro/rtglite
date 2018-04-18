@@ -14,6 +14,7 @@ var MenuRestSchema = Schema({
     limitecomponentes: Number,
     espromocion: Boolean,
     itemspromo: [],
+    descripcionfull: String,
     debaja: Boolean
 });
 

@@ -10,6 +10,7 @@ api.put('/diccf/u/:id', md_auth.ensureAuth, DiccionarioFoxController.modificar);
 api.put('/diccf/d/:id', md_auth.ensureAuth, DiccionarioFoxController.eliminar);
 api.get('/diccf/lstdiccf/:debaja', md_auth.ensureAuth, DiccionarioFoxController.getListaDiccionarioFox);
 api.get('/diccf/getdiccf/:id', md_auth.ensureAuth, DiccionarioFoxController.getDiccionarioFox);
+api.get('/diccf/getprodidmint/:idmint', DiccionarioFoxController.getProductoByIdMint);
 
 // API para Fox
 api.get('/df/ldf', DiccionarioFoxController.lstdictfox);

@@ -4,6 +4,9 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { GLOBAL } from './global';
 
+import { Cliente } from '../models/cliente';
+import { TelefonoCliente } from '../models/telefonocliente';
+
 @Injectable()
 export class ClienteService {
     public url: string;
@@ -50,6 +53,31 @@ export class ClienteService {
         return this._http.post(this.url + 'cp', JSON.stringify(params), { headers: headers }).map(res => res.json());
     }
 
+    async crearPaqueteClienteAsync(cliente, telefono, direccion, factura, token): Promise<any> {
+        const params = {
+            cliente: cliente,
+            telefono: telefono,
+            direccion: direccion,
+            factura: factura
+        };
+
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': token
+        });
+
+        try {
+            const response = await this._http.post(this.url + 'cp', JSON.stringify(params), { headers: headers }).toPromise();
+            const res = response.json();
+            if (!res.entidad) {
+                return null;
+            }
+            return res.entidad;
+        } catch (error) {
+            await console.log('ERROR: ', error);
+        }
+    }
+
     modificar(cliente, token) {
         const params = JSON.stringify(cliente);
         const headers = new Headers({
@@ -88,6 +116,24 @@ export class ClienteService {
         return this._http.get(this.url + 'getclibytel/' + telcliente, { headers: headers }).map(res => res.json());
     }
 
+    async getCliByTelAsync(telcliente: string, token: string): Promise<Cliente> {
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': token
+        });
+
+        try {
+            const response = await this._http.get(this.url + 'getclibytel/' + telcliente, { headers: headers }).toPromise();
+            const res = response.json();
+            if (!res.lista || res.lista.length === 0) {
+                return null;
+            }
+            return res.lista[0];
+        } catch (error) {
+            await console.log('ERROR: ', error);
+        }
+    }
+
     // Teléfonos del cliente
     crearTelefono(telefonoNuevo, token) {
         const params = JSON.stringify(telefonoNuevo);
@@ -115,6 +161,25 @@ export class ClienteService {
         });
 
         return this._http.get(this.url + 'gettelbyidclinum/' + idcliente + '/' + telefono, { headers: headers }).map(res => res.json());
+    }
+
+    async getTelefonoClienteNumtelAsync(idcliente, telefono, token): Promise<TelefonoCliente> {
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': token
+        });
+
+        try {
+            const response =
+            await this._http.get(this.url + 'gettelbyidclinum/' + idcliente + '/' + telefono, { headers: headers }).toPromise();
+            const res = response.json();
+            if (!res.entidad) {
+                return null;
+            }
+            return res.entidad;
+        } catch (error) {
+            await console.log('ERROR: ', error);
+        }
     }
 
     getTelefonoCliente(identidad, token) {
