@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 var app = require('./app');
-var port = process.env.PORT || 3789;
+var port = process.env.PORT || 4200;
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/rtglite', { useMongoClient: true })

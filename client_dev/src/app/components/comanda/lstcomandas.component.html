@@ -1,8 +1,9 @@
 <div class="container-fluid" style="margin-top: 10px">
-    <div class="row">
-        <div class="col-3">
-            <input id="srchCli" type="text" class="form-control" minlength="8" maxlength="8" pattern="[0-9]+" (keyup.enter)="buscarCliente(modalSelCliente, modalNuevoCliente)" 
-                #srchCli="ngModel" [(ngModel)]="telABuscar" placeholder="Teléfono del cliente..."/>
+    <div class="row justify-content-center">
+        <div class="col-6 text-center">
+            <button type="button" class="btn btn-outline-success btn-block btn-lg" (click)="nuevoPedido(modalNuevoPedido)">AGREGAR PEDIDO</button>
+           <!--<input id="srchCli" type="text" class="form-control" minlength="8" maxlength="8" pattern="[0-9]+" (keyup.enter)="buscarCliente(modalSelCliente, modalNuevoCliente)" 
+                #srchCli="ngModel" [(ngModel)]="telABuscar" placeholder="Teléfono del cliente..."/>-->
         </div>
     </div>    
     <hr/>
@@ -64,7 +65,7 @@
                         <img class="rounded" src="../../../assets/{{cmd.idtipocomanda.imagen}}" alt="{{cmd.idtipocomanda.descripcion}}">
                     </td>
                 </tr>
-                <tr>
+                <tr *ngIf="false">
                     <td class="text-center font-weight-bold" style="padding-top: 1em; font-size: 1.25em">
                         Total: Q {{cmd.totalcomanda | number:'1.2-2'}}<br/>
                         <img class="rounded" *ngFor="let ifp of cmd.imgpago" src="../../../assets/{{ifp}}.png" alt="FP">
@@ -78,7 +79,9 @@
                     <td colspan="2">
                         <h4>
                             Orden No. {{cmd.tracking | number:'1.0-0'}} a nombre de {{cmd.idcliente.nombre}}&nbsp;
-                            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="verDetCobro(cmd, modalDetCobroComanda)">Detalle de cobro</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="verDetCobro(cmd, modalDetCobroComanda)" *ngIf="cmd.detcobrocomanda && cmd.detcobrocomanda.length > 0">Detalle de cobro</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="goToUrl(cmd)" *ngIf="cmd.idestatuscomanda._id != '59fea7bc4218672b285ab0e6'">Editar</button>
+                            <button type="button" class="btn btn-outline-warning btn-sm" (click)="printComanda(cmd.tracking, cmd._id)">IMPRIMIR</button>
                         </h4>                        
                     </td>
                 </tr>
@@ -86,7 +89,7 @@
                     <td class="font-weight-bold" style="vertical-align: top">Transcurrido:</td>
                     <td style="padding-left: 0.15em; vertical-align: top; font-weight: bold;">{{cmd.fechafintoma | amTimeAgo:true}}</td>
                 </tr>
-                <tr>
+                <tr *ngIf="false">
                     <td class="font-weight-bold" style="vertical-align: top">Teléfono:</td>
                     <td style="padding-left: 0.15em; vertical-align: top;">{{cmd.idtelefonocliente.telefono}}</td>
                 </tr>
@@ -94,7 +97,7 @@
                     <td class="font-weight-bold" style="vertical-align: top;">Atendió:</td>
                     <td style="padding-left: 0.15em; vertical-align: top;">{{cmd.idusuario.nombre}}</td>
                 </tr>
-                <tr>
+                <tr *ngIf="cmd.iddireccioncliente && cmd.idtipocomanda == '59fff327596e572d9cdac917'">
                     <td class="font-weight-bold" style="vertical-align: top;">Entregar en:</td>
                     <td style="padding-left: 0.15em; vertical-align: top;">
                          {{cmd.iddireccioncliente.direccion}}, zona {{cmd.iddireccioncliente.zona}}, colonia {{cmd.iddireccioncliente.colonia}} 
@@ -104,7 +107,7 @@
                 <tr>
                     <td class="font-weight-bold" style="vertical-align: top;">Restaurante:</td>
                     <td style="padding-left: 0.15em; vertical-align: top;">
-                        {{cmd.idrestaurante ? cmd.idrestaurante.nombre : cmd.iddireccioncliente.idrestaurante.nombre}}
+                        {{cmd.idrestaurante ? cmd.idrestaurante.nombre : (cmd.iddireccioncliente ? cmd.iddireccioncliente.idrestaurante.nombre : '')}}
                     </td>
                 </tr>
                 <tr>
@@ -113,7 +116,7 @@
                         {{cmd.idtiempoentrega ? cmd.idtiempoentrega.tiempo : ''}}
                     </td>
                 </tr>
-                <tr>
+                <tr *ngIf="cmd.iddireccioncliente && cmd.idtipocomanda == '59fff327596e572d9cdac917'">
                     <td class="font-weight-bold" style="vertical-align: top;">Motorista:</td>
                     <td style="padding-left: 0.15em; vertical-align: top;">{{cmd.idmotorista ? cmd.idmotorista.nombre : ''}}</td>
                 </tr>
@@ -180,6 +183,28 @@
         </div>
     </div>
 </div>
+<ng-template #modalNuevoPedido let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">¿A nombre de quién está el pedido?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="row">
+                <div class="col-12">
+                    <input id="txtNombreDe" name="txtNombreDe" #nombreDe type="text" class="form-control form-control-sm" placeholder="Nombre" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" aria-label="Close" (click)="c(nombreDe.value)">
+            <span class="oi oi-check" title="Guardar" aria-hidden="true"></span>
+        </button>
+    </div>
+</ng-template>
 <ng-template #modalSelCliente let-c="close" let-d="dismiss">
     <div class="modal-header">
         <h4 class="modal-title">¿Quién está llamando?</h4>

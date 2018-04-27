@@ -90,6 +90,35 @@ export class MintService {
       "idUsuario":"45074c9a-49cf-4ab7-a80c-65fe166a21db",
       "nombreComercio":"Comercio Test",
       "total":20.00
+   },
+   {
+      "cliente":{
+         "apellidos":"Aragón Sánchez",
+         "correoElectronico":"jaragon@spcdatapro.com",
+         "idCliente":3949,
+         "nit":"4829032-7",
+         "nombres":"Javier Antonio",
+         "razonSocial":"Javier Aragón",
+         "telefono":"30223231"
+      },
+      "codigoAuorizacionCashless":98020,
+      "detalle":[
+         {
+            "cantidad":3,
+            "descripcion":"Quesoburguesa doble",
+            "idOrdenDetalle":76484,
+            "idProducto":200,
+            "precio":20.00,
+            "total":60.00
+         }
+      ],
+      "fecha":"2018-04-26T09:32:42.497",
+      "idComercio":20,
+      "idOrden":58366,
+      "idTransaccionCashless":185830,
+      "idUsuario":"45074c9a-49cf-4ab7-a80c-65fe166a21db",
+      "nombreComercio":"Jake's Burguer",
+      "total":60.00
    }
 ]`;
     }
@@ -162,6 +191,7 @@ export class MintService {
         let pedidos: Array<any>;
         // return this._http.get(this.url + 'lstrestaurantes/' + cuales, { headers: headers }).map(res => res.json());
         pedidos = JSON.parse(this.datosEjemplo);
+        console.clear();
         pedidos.forEach(async (pedido, i) => {
             const comanda = await this._comandaService.getComandaByTrackingNo(+pedido.idOrden, token);
             if (!comanda) {

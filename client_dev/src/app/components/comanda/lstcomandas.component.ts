@@ -10,13 +10,14 @@ import { Comanda } from '../../models/comanda';
 import { TipoDireccion } from '../../models/tipodireccion';
 import { Restaurante } from '../../models/restaurante';
 // Servicios
-import { GLOBAL } from '../../services/global';
+import { GLOBAL, EstatusComanda } from '../../services/global';
 import { ClienteService } from '../../services/cliente.service';
 import { ComandaService } from '../../services/comanda.service';
 import { LocalStorageService } from '../../services/localstorage.service';
 import { TipoDireccionService } from '../../services/tipodireccion.service';
 import { RestauranteService } from '../../services/restaurante.service';
 import { MintService } from '../../services/mint.service';
+import { GoogleApiService } from '../../services/gapi.service';
 import {ToasterModule, ToasterService, ToasterConfig} from 'angular2-toaster';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
@@ -32,7 +33,7 @@ import 'moment/locale/es';
     templateUrl: './lstcomandas.component.html',
     encapsulation: ViewEncapsulation.None,
     providers: [
-        ClienteService, LocalStorageService, ComandaService, TipoDireccionService, RestauranteService, MintService
+        ClienteService, LocalStorageService, ComandaService, TipoDireccionService, RestauranteService, MintService, GoogleApiService
     ],
     styles: [`.modal-size .modal-content { width: 600px }`]
 })
@@ -68,6 +69,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
         private _tipoDireccionService: TipoDireccionService,
         private _restauranteService: RestauranteService,
         private _mintService: MintService,
+        private _gapiService: GoogleApiService,
         private modalService: NgbModal,
         toasterService: ToasterService
     ) {
@@ -84,6 +86,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
         this.contadores = [];
         this.filtroCliente = null;
         this.fdel = moment().format('YYYY-MM-DD');
+        // this.fdel = moment('01/01/2018').format('YYYY-MM-DD');
         this.fal = moment().format('YYYY-MM-DD');
         this.restaurantesUsuario = [];
         this.mintOrders = [];
@@ -111,9 +114,9 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
     }
 
     public loadComandasEnhanced(idestatus: string = '') {
-        this.mintOrders = this._mintService.listaPedidos(this.token, '0');
-        // console.log(this.mintOrders);
-        /*
+        // this.mintOrders = this._mintService.listaPedidos(this.token, '0');
+        // console.log('Mint orders: ', this.mintOrders);
+
         if (this.restaurantesUsuario.length > 0) { this.restaurantesUsuario = []; }
         this._ls.get('restouchusr').restaurante.forEach((rst) => { this.restaurantesUsuario.push(rst._id); });
         const parametros = {
@@ -136,7 +139,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
                 this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
             }
         );
-        */
+
     }
 
     public loadContadores() {
@@ -279,5 +282,58 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
             reason => { }
         );
 
+    }
+
+    nuevoPedido(modalNuevoPedido) {
+        this.modalService.open(modalNuevoPedido).result.then(
+            result => {
+                console.log(result);
+                this.clienteNuevo = new Cliente(null, result, [], null, null, false, [], false);
+                this._clienteService.crear(this.clienteNuevo, this.token).subscribe(
+                    response => {
+                        if (response.entidad) {
+                            this._router.navigate(['/comanda', response.entidad._id]);
+                        } else {
+                            this.toasterService.pop('error', 'Error', 'Error: ' + response.mensaje);
+                        }
+                    },
+                    error => {
+                        const respuesta = JSON.parse(error._body);
+                        this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+                    }
+                );
+            },
+            reason => {}
+        );
+    }
+
+    goToUrl(obj: any) {
+        this._router.navigate(['/comanda', obj.idcliente._id, '', 0, obj._id ]);
+    }
+
+    printComanda(trackingNo: number, idcomanda: string) {
+        this._gapiService.updGoogleToken().subscribe(
+            respUpd => {
+                this._gapiService.print(trackingNo, this.token).subscribe(
+                    respPrint => {
+                        this.toasterService.pop('info', 'Imprimiendo', 'Imprimiendo Orden No: ' + trackingNo);
+                        this._router.navigate(['/comandas']);
+                    },
+                    errorPrint => {
+                        const respuesta = JSON.parse(errorPrint._body);
+                        this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+                    },
+                    () => {
+                        this._comandaService.cambiarEstatus(idcomanda, EstatusComanda.Produccion).subscribe(
+                            resUpdEst => { }, errUpdEst => { }
+                        );
+                    }
+                );
+            },
+            errUpd => {
+                const respuesta = JSON.parse(errUpd._body);
+                this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+            }
+        );
     }
 }

@@ -4,7 +4,7 @@
         <div class="col-6">
             <table>
                 <tbody>
-                    <tr>
+                    <tr *ngIf="comanda.idtipocomanda == '59fff327596e572d9cdac917'">
                         <th class="text-right">Dirección de entrega:</th>
                         <td style="padding-left: 0.25em">
                             <button class="btn btn-outline-primary btn-sm" (click)="selectDireccionesCliente(modalSelDireccionCliente)">
@@ -13,7 +13,7 @@
                             </button>
                         </td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="false">
                         <th class="text-right">Teléfono:</th>
                         <td style="padding-left: 0.25em">
                             <button type="button" class="btn btn-outline-primary btn-sm" (click)="selectTelefonoCliente(modalSelTelefono)">
@@ -29,7 +29,7 @@
                             </button>
                         </td>
                     </tr>
-                    <tr>
+                    <tr *ngIf="false">
                         <th class="text-right">Facturar a:</th>
                         <td style="padding-left: 0.25em; white-space: nowrap;">                            
                             <button type="button" class="btn btn-outline-primary btn-sm" (click)="setFacturarA(modalSelFacturarA)">
@@ -60,7 +60,7 @@
         <div class="col-3">
             <table>
                 <tbody>
-                    <tr>
+                    <tr *ngIf="false">
                         <td colspan="2" class="text-right">
                             <button type="button" class="btn btn-outline-success btn-sm btn-block" (click)="verHistorialCliente(modalHistorialCliente)" *ngIf="!eshistorica">Ver historial</button>
                         </td>
@@ -174,7 +174,7 @@
                                                 <!-- Finaliza tabla de extras/notas sobre componentes -->
                                             </td>
                                             <td class="align-top" style="white-space: nowrap">
-                                                <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" *ngIf="dc.tieneextras" (click)="pideExtras(modalExtras, i, j)">Extras</button>
+                                                <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" *ngIf="false" (click)="pideExtras(modalExtras, i, j)">Extras</button>
                                                 <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" (click)="pideNotas(modalNotas, i, j)">Notas</button>
                                             </td>
                                         </tr>
@@ -192,12 +192,12 @@
                                         </button>
                                     </div>                                   
                                 </td>
-                                <td class="align-top text-right">{{dc.precio | number:'1.2-2'}}&nbsp;c/u</td>
+                                <td class="align-top text-right">{{dc.precio | number:'1.2-2'}}<span *ngIf="+dc.precio != 0">&nbsp;c/u</span></td>
                             </tr>
                         </table>
                     </small>
                 </div>
-                <div class="card-footer">
+                <div class="card-footer" *ngIf="comanda.totalcomanda != 0">
                     <div style="width:100%; text-align: right; font-weight: bold;">
                         <span>Total a pagar: {{comanda.totalcomanda | number:'1.2-2'}}</span>
                     </div>
@@ -212,6 +212,10 @@
                         <button type="button" class="btn btn-success btn-sm" *ngIf="comanda.totalcomanda > 0 && eshistorica" (click)="guardarHistorica()" 
                             [disabled]="!comanda.idtipocomanda || !comanda.idrestaurante || !comanda.idtiempoentrega || !comanda.fecha">
                             Guardar histórica
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm" (click)="guardarComanda()" 
+                            [disabled]="!comanda.idtipocomanda || !comanda.idrestaurante">
+                            Guardar e imprimir
                         </button>
                     </div>
                 </div>

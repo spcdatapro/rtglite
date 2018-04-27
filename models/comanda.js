@@ -6,7 +6,7 @@ var counter = require('./counter');
 
 var ComandaSchema = Schema({
     idcliente: { type: Schema.ObjectId, ref: 'cliente', required: true },    
-    idtelefonocliente: { type: Schema.ObjectId, ref: 'telefonocliente', required: true },
+    idtelefonocliente: { type: Schema.ObjectId, ref: 'telefonocliente' },
     iddireccioncliente: { type: Schema.ObjectId, ref: 'direccioncliente' },    
     fecha: Date,
     idtipocomanda: { type: Schema.ObjectId, ref: 'tipocomanda', required: true },
@@ -29,7 +29,7 @@ var ComandaSchema = Schema({
     debaja: { type: Boolean, default: false }
 });
 
-/*
+
 ComandaSchema.pre('save', function(next){
     var doc = this;
     counter.findByIdAndUpdate({ _id: 'trackingnumber' }, { $inc: { seq: 1 } }, function (error, counter) {
@@ -40,5 +40,5 @@ ComandaSchema.pre('save', function(next){
         next();
     });
 });
-*/
+
 module.exports = mongoose.model('comanda', ComandaSchema, 'comanda');

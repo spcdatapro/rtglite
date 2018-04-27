@@ -15,10 +15,10 @@ comanda_routes = require('./routes/comanda'), componente_routes = require('./rou
 formasPago_routes = require('./routes/formapago'), emisorTarjeta_routes = require('./routes/emisortarjeta'), banner_routes = require('./routes/banner'),
 vuelto_routes = require('./routes/vuelto'), razonCortesia_router = require('./routes/razoncortesia'), dictFox_router = require('./routes/diccionariofox'),
 tiempoEntrega_routes = require('./routes/tiempoentrega'), rolUsuario_routes = require('./routes/rolusuario'), reportes_routes = require('./routes/rptventas'),
-presupuestoVentas_routes = require('./routes/presupuestoventas');
+presupuestoVentas_routes = require('./routes/presupuestoventas'), gapi_routes = require('./routes/gapi');
 
 //Middlewares de body-parser
-app.use(bodyParser.urlencoded({ extended:false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //Configurar cabeceras y CORS
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 //Rutas base
 // Inicia lineas para servidor de produccion
-//app.use('/', express.static('client', { redirect: false })); //Descomentar para cuando se vaya a produccion
+app.use('/', express.static('client', { redirect: false })); //Descomentar para cuando se vaya a produccion
 // Fin de lineas para servidor de produccion
 app.use('/api', usuario_routes);
 app.use('/api', menu_routes);
@@ -56,9 +56,10 @@ app.use('/api', tiempoEntrega_routes);
 app.use('/api', rolUsuario_routes);
 app.use('/api', reportes_routes);
 app.use('/api', presupuestoVentas_routes);
+app.use('/api', gapi_routes);
 
 // Inicia lineas para servidor de produccion
-//app.get('*', (req, res, next) => { res.sendFile(path.resolve('client/index.html')); }); //Descomentar para cuando se vaya a produccion
+app.get('*', (req, res, next) => { res.sendFile(path.resolve('client/index.html')); }); //Descomentar para cuando se vaya a produccion
 // Fin de lineas para servidor de produccion
 
 module.exports = app;

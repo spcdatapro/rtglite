@@ -15,8 +15,10 @@ import { VentasVariosComponent } from './components/reportes/ventas/ventasvarios
 const appRoutes: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'comandas', component: ListaComandasComponent },
+    { path: 'comanda/:idcliente', component: ComandaComponent },
     { path: 'comanda/:idcliente/:telefono', component: ComandaComponent },
     { path: 'comanda/:idcliente/:telefono/:historica', component: ComandaComponent },
+    { path: 'comanda/:idcliente/:telefono/:historica/:idcomanda', component: ComandaComponent },
     { path: 'clientes', component: ListadoClientesComponent },
     { path: 'clientes/:idcliente', component: ListadoClientesComponent },
     { path: 'mnurest', component: MenuRestauranteComponent },

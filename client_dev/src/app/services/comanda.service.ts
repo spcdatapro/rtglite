@@ -125,6 +125,14 @@ export class ComandaService {
         return this._http.get(this.url + 'contporest/' + fdel + '/' + fal, { headers: headers }).map(res => res.json());
     }
 
+    cambiarEstatus(idcomanda: string, estatus: string) {
+        const headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+
+        return this._http.get(this.url + estatus + '/' + idcomanda, { headers: headers }).map(res => res.json());
+    }
+
     // Detalle comanda
     listaDetalleComanda(token, idcomanda) {
         const headers = new Headers({

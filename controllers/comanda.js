@@ -62,7 +62,7 @@ function modificarComanda(req, res){
 
     Comanda.findByIdAndUpdate(idcom, body, { new: true }, (err, comandaUpd) => {
         if (err) {
-            res.status(500).send({ mensaje: 'Error en el servidor al modificar la comanda.' });
+            res.status(500).send({ mensaje: 'Error en el servidor al modificar la comanda. ERROR: ' + err });
         } else {
             if (!comandaUpd) {
                 res.status(200).send({ mensaje: 'No se pudo modificar la comanda.' });
@@ -322,7 +322,8 @@ function getComByTrackingNo(req, res) {
                     res.status(200).send({
                         mensaje: 'Lista de comandas.',
                         lista: lista,
-                        errores: errores
+                        errores: errores,
+                        hoy: moment().format('DD/MM/YYYY HH:mm:ss')
                     });
                 }
             }

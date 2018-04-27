@@ -26,6 +26,7 @@ import { VisorPDFComponent } from './components/reportes/visorpdf.component';
 import { VentasVariosComponent } from './components/reportes/ventas/ventasvarios.component';
 
 // Servicios
+import { GoogleApiService } from './services/gapi.service';
 import { DiccionarioFoxService } from './services/diccionariofox.service';
 
 // Pipes
@@ -42,7 +43,7 @@ import { FilterListPipe } from './pipes/filterlist.pipe';
     MomentModule, HttpClientModule
   ],
   providers: [
-    appRoutingProviders, DiccionarioFoxService
+    appRoutingProviders, GoogleApiService, DiccionarioFoxService
   ],
   bootstrap: [AppComponent]
 })
