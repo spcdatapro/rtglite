@@ -9,9 +9,6 @@ export class JsReportService {
     public url: string;
 
     constructor(private _http: HttpClient, private _sanitizer: DomSanitizer) {
-        // this.url = 'http://localhost:5489/api/report'; //pruebas locales
-        // this.url = 'http://138.68.248.143:5489/api/report'; // servidor de pruebas
-        // this.url = 'http://104.236.58.180:5489/api/report'; // servidor de produccion
         this.url = 'http://' + window.location.hostname + ':5489/api/report'; // servidor de produccion
     }
 

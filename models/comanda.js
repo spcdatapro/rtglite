@@ -18,6 +18,7 @@ var ComandaSchema = Schema({
     cantidaditems: Number,
     totalcomanda: Number,
     tracking: { type: Number, unique: true, dropDups: true },
+    noorden: { type: Number, unique: true, dropDups: true },
     detallecomanda: Array,
     detcobrocomanda: Array,
     detfacturara: Array,
@@ -36,7 +37,7 @@ ComandaSchema.pre('save', function(next){
         if (error){
             return next(error);
         }
-        doc.tracking = counter.seq;
+        doc.noorden = counter.seq;
         next();
     });
 });

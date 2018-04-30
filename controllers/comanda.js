@@ -23,11 +23,11 @@ function crearComanda(req, res){
     com.idcliente = params.idcliente;
     com.idtelefonocliente = params.idtelefonocliente;
     com.iddireccioncliente = params.iddireccioncliente;    
-    com.fecha = params.fecha;
+    com.fecha = new Date(params.fecha);
     com.idtipocomanda = params.idtipocomanda;
     com.idusuario = params.idusuario;
-    com.fechainitoma = params.fechainitoma;
-    com.fechafintoma = params.fechafintoma;
+    com.fechainitoma = new Date(params.fechainitoma);
+    com.fechafintoma = new Date(params.fechafintoma);
     com.idestatuscomanda = params.idestatuscomanda;
     com.notas = params.notas;
     com.cantidaditems = params.cantidaditems;
@@ -40,20 +40,23 @@ function crearComanda(req, res){
     com.idmotorista = params.idmotorista;
     com.imgpago = params.imgpago;
     com.debaja = params.debaja;   
-    com.bitacoraestatus = [ { idestatuscomanda: mongoose.Types.ObjectId("59fea7304218672b285ab0e2"), estatus: "Pendiente", fecha: moment().toDate() } ];
+    com.bitacoraestatus = params.bitacoraestatus;
 
-    com.save((err, comandaSvd) => {
-        if (err) {
-            res.status(500).send({ mensaje: 'Error en el servidor al crear la comanda. Error: ' + err });
-        } else {
-            if (!comandaSvd) {
-                res.status(200).send({ mensaje: 'No se pudo grabar la comanda.' });
+    if(com.detallecomanda && com.detallecomanda.length > 0){
+        com.save((err, comandaSvd) => {
+            if (err) {
+                res.status(500).send({ mensaje: 'Error en el servidor al crear la comanda. Error: ' + err });
             } else {
-                res.status(200).send({ mensaje: 'Comanda grabada exitosamente.', entidad: comandaSvd });
+                if (!comandaSvd) {
+                    res.status(200).send({ mensaje: 'No se pudo grabar la comanda.' });
+                } else {
+                    res.status(200).send({ mensaje: 'Comanda grabada exitosamente.', entidad: comandaSvd });
+                }
             }
-        }
-    });
-
+        });
+    } else {
+        res.status(200).send({ mensaje: 'Comanda sin detalle.', entidad: com });
+    }
 }
 
 function modificarComanda(req, res){
@@ -163,7 +166,7 @@ function listaComandasPost(req, res) {
 
     // console.log(fltr);
 
-    Comanda.find(fltr, null, { sort: { fecha: -1 } })
+    Comanda.find(fltr, null, { sort: { tracking: -1 } })
         .populate('idcliente', ['_id', 'nombre'])
         .populate('idtipocomanda', ['_id', 'descripcion', 'imagen'])
         .populate('idusuario', ['_id', 'nombre'])

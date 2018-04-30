@@ -142,7 +142,7 @@ export class ComandaComponent implements OnInit {
         this.carta = new Array();
         this.comanda = new Comanda(
             null, null, null, null, null, null, null, null, null, null, null,
-            null, 0, 0, [], [], [], null, null, null, null, [], null, false
+            null, 0, 0, [], [], [], null, null, null, null, [], null, null, false
         );
         this.detalleComanda = [];
         this.detcom = new DetalleComanda(null, 1, null, null, '', [], [], null, null, null, false);
@@ -523,7 +523,7 @@ export class ComandaComponent implements OnInit {
     cancelaPedido() {
         this.comanda = new Comanda(
             null, null, null, null, null, null, null, null, null, null,
-            null, null, 0, 0, [], [], [], null, null, null, null, [], null, false
+            null, null, 0, 0, [], [], [], null, null, null, null, [], null, null, false
         );
         this._router.navigate(['/comandas']);
     }
@@ -1141,12 +1141,14 @@ export class ComandaComponent implements OnInit {
     }
 
     guardarComanda() {
-        // this.comanda._id = this.comandaOriginal._id;
-        // this.comanda.fecha = this.comandaOriginal.fecha;
-        // this.comanda.fechainitoma = this.comandaOriginal.fecha;
-        // this.comanda.fechafintoma = this.comandaOriginal.fecha;
+        if (this.comandaOriginal && this.comandaOriginal._id && this.comandaOriginal._id.trim() !== '') {
+            this.comanda._id = this.comandaOriginal._id;
+            this.comanda.fecha = this.comandaOriginal.fecha;
+            this.comanda.fechainitoma = this.comandaOriginal.fecha;
+            this.comanda.fechafintoma = this.comandaOriginal.fecha;
+            this.comanda.tracking = this.comandaOriginal.tracking;
+        }
         this.comanda.detallecomanda = this.detalleComanda;
-        // this.comanda.tracking = this.comandaOriginal.tracking;
         this.comanda.idestatuscomanda = '59fea7524218672b285ab0e3';
         this.comanda.iddatosfacturacliente =
         this.comandaOriginal.iddatosfacturacliente ? this.comandaOriginal.iddatosfacturacliente._id : null;
@@ -1154,25 +1156,47 @@ export class ComandaComponent implements OnInit {
         // console.log(this.comanda);
         this.comanda.fechafintoma = moment().toDate();
 
-        this._comandaService.crearComanda(this.comanda, this.token).subscribe(
-            response => {
-                if (!response.entidad) {
-                    this.toasterService.pop('error', 'Error', 'Error: ' + response.mensaje);
-                } else {
-                    const trackingNo = response.entidad.tracking;
-                    const idcomanda = response.entidad._id;
-                    this.comanda = new Comanda(
-                        null, null, null, null, null, null, null, null, null, null,
-                        null, null, 0, 0, [], [], [], null, null, null, null, [], null, false
-                    );
-                    this.printComanda(trackingNo, idcomanda);
+        if (this.comandaOriginal && this.comandaOriginal._id && this.comandaOriginal._id.trim() !== '') {
+            this._comandaService.modificarComanda(this.comanda, this.token).subscribe(
+                response => {
+                    if (!response.entidad) {
+                        this.toasterService.pop('error', 'Error', 'Error: ' + response.mensaje);
+                    } else {
+                        const trackingNo = response.entidad.tracking;
+                        const idcomanda = response.entidad._id;
+                        this.comanda = new Comanda(
+                            null, null, null, null, null, null, null, null, null, null,
+                            null, null, 0, 0, [], [], [], null, null, null, null, [], null, null, false
+                        );
+                        this.printComanda(trackingNo, idcomanda);
+                    }
+                },
+                error => {
+                    const respuesta = JSON.parse(error._body);
+                    this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
                 }
-            },
-            error => {
-                const respuesta = JSON.parse(error._body);
-                this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
-            }
-        );
+            );
+        } else {
+            this._comandaService.crearComanda(this.comanda, this.token).subscribe(
+                response => {
+                    if (!response.entidad) {
+                        this.toasterService.pop('error', 'Error', 'Error: ' + response.mensaje);
+                    } else {
+                        const trackingNo = response.entidad.tracking;
+                        const idcomanda = response.entidad._id;
+                        this.comanda = new Comanda(
+                            null, null, null, null, null, null, null, null, null, null,
+                            null, null, 0, 0, [], [], [], null, null, null, null, [], null, null, false
+                        );
+                        this.printComanda(trackingNo, idcomanda);
+                    }
+                },
+                error => {
+                    const respuesta = JSON.parse(error._body);
+                    this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+                }
+            );
+        }
     }
 
     //#region Historico

@@ -22,6 +22,7 @@ export class MintService {
     private url: string;
     private datosEjemplo: string;
     private uid: string;
+    private token: string;
 
     private getTestData() {
         return `[
@@ -127,15 +128,17 @@ export class MintService {
         private _http: Http, private _comandaService: ComandaService, private _dictFoxService: DiccionarioFoxService,
         private _clienteService: ClienteService, private _ls: LocalStorageService
     ) {
-        this.url = GLOBAL.url + 'rest/';
-        this.datosEjemplo = this.getTestData();
-        this.uid = this._ls.get('restouchusr')._id;
+        this.url = GLOBAL.url + 'mint/';
+        // this.datosEjemplo = this.getTestData();
+        const rtu = this._ls.get('restouchusr');
+        this.uid = rtu ? rtu._id : '';
+        this.token = rtu ? rtu.token : '';
     }
 
     private async nuevaComanda(token: string, pedido: any) {
         const comanda = new Comanda(
             null, null, null, null, null, null, null, null, null, null, null,
-            null, null, null, [], [], [], null, null, null, [], [], null, false
+            null, null, null, [], [], [], null, null, null, [], [], null, null, false
         );
 
         comanda.tracking = pedido.idOrden;
@@ -152,8 +155,10 @@ export class MintService {
             new BitacoraEstatus('59fea7524218672b285ab0e3', 'Recibido en restaurante', moment(pedido.fecha).toDate())
         );
         comanda.debaja = false;
-        pedido.detalle.forEach(async (det, i) => {
+        for (let i = 0; i < pedido.detalle.length; i++ ) {
+            const det = pedido.detalle[i];
             const producto = await this._dictFoxService.getProductoMint(+det.idProducto, '');
+            // console.log('Producto del pedido ' + comanda.tracking + ': ', producto);
             if (producto) {
                 comanda.detallecomanda.push(
                     new DetalleComanda(
@@ -162,46 +167,44 @@ export class MintService {
                     )
                 );
             }
-        });
-
-        let cliente = await this._clienteService.getCliByTelAsync(pedido.cliente.telefono, '');
-        if (!cliente) {
-            const tmp = await this._clienteService.crearPaqueteClienteAsync(
-                new Cliente(
-                    null, (pedido.cliente.nombres + ' ' + pedido.cliente.apellidos), null, null,
-                    pedido.cliente.correoElectronico, false, null, false
-                ),
-                new TelefonoCliente(null, null, pedido.cliente.telefono, false),
-                new DireccionCliente(null, null, null, null, null, null, null, null, false),
-                new DatoFacturaCliente(null, null, pedido.cliente.nit, pedido.cliente.razonSocial, null, false),
-                ''
-            );
-            cliente = await this._clienteService.getCliByTelAsync(tmp.telefono, '');
         }
+
+        // pedido.detalle.forEach(async (det, i) => { });
+        // this.clienteNuevo = new Cliente(null, result, [], null, null, false, [], false);
+        const cliente = await this._clienteService.crearAsync(
+            new Cliente(null, (pedido.cliente.nombres + ' ' + pedido.cliente.apellidos), [], null, null, false, [], false),
+            this.token
+        );
         comanda.idcliente = cliente._id;
-        const telefono = await this._clienteService.getTelefonoClienteNumtelAsync(cliente._id, pedido.cliente.telefono, '');
-        comanda.idtelefonocliente = telefono._id;
+        comanda.idtelefonocliente = null;
+        if (!comanda.detallecomanda || comanda.detallecomanda.length === 0) {
+            console.log('Sin detalle: ' + comanda.tracking, comanda);
+        }
         return await this._comandaService.crearComandaAsync(comanda, token);
     }
 
 
-    listaPedidos(token: string, cuales = '0') {
+    getMintToken() {
+        const headers = new Headers({ 'Content-Type': 'application/json' });
+        return this._http.get(this.url + 'token', { headers: headers }).map(res => res.json());
+    }
+
+    listaPedidos(token: string, fdelstr: string, falstr: string) {
+        const params = JSON.stringify({ fdelstr: fdelstr, falstr: falstr });
         const headers = new Headers({ 'Content-Type': 'application/json', 'Authorization': token });
+        return this._http.post(this.url + 'ordenes', params, { headers: headers }).map(res => res.json());
+    }
+
+    async crearPedidos(pedidos: Array<any>, token: string) {
         const nuevas: Array<string> = [];
-        let pedidos: Array<any>;
-        // return this._http.get(this.url + 'lstrestaurantes/' + cuales, { headers: headers }).map(res => res.json());
-        pedidos = JSON.parse(this.datosEjemplo);
-        console.clear();
         pedidos.forEach(async (pedido, i) => {
             const comanda = await this._comandaService.getComandaByTrackingNo(+pedido.idOrden, token);
             if (!comanda) {
                 const nueva = await this.nuevaComanda(token, pedido);
                 nuevas.push(nueva.tracking.toString());
             } else {
-                console.log('Ya existe el pedido No. ' + pedido.idOrden + '.');
+                // console.log('Ya existe el pedido No. ' + pedido.idOrden + '.');
             }
         });
-        console.log('Agregadas: ', nuevas);
-        return [];
     }
 }

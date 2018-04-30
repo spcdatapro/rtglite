@@ -27,7 +27,10 @@ import { VentasVariosComponent } from './components/reportes/ventas/ventasvarios
 
 // Servicios
 import { GoogleApiService } from './services/gapi.service';
+// import { MintService } from './services/mint.service';
+import { ComandaService } from './services/comanda.service';
 import { DiccionarioFoxService } from './services/diccionariofox.service';
+import { ClienteService } from './services/cliente.service';
 
 // Pipes
 import { FilterListPipe } from './pipes/filterlist.pipe';
@@ -43,7 +46,7 @@ import { FilterListPipe } from './pipes/filterlist.pipe';
     MomentModule, HttpClientModule
   ],
   providers: [
-    appRoutingProviders, GoogleApiService, DiccionarioFoxService
+    appRoutingProviders, GoogleApiService, DiccionarioFoxService, ComandaService, ClienteService
   ],
   bootstrap: [AppComponent]
 })

@@ -20,6 +20,7 @@
     "moment": "^2.22.1",
     "mongoose": "^4.13.12",
     "mongoose-auto-increment": "^5.0.1",
+    "qs": "^6.5.1",
     "request": "^2.85.0"
   },
   "devDependencies": {

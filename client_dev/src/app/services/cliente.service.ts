@@ -37,6 +37,25 @@ export class ClienteService {
         return this._http.post(this.url + 'c', params, { headers: headers }).map(res => res.json());
     }
 
+    async crearAsync(clienteNuevo, token) {
+        const params = JSON.stringify(clienteNuevo);
+        const headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': token
+        });
+
+        try {
+            const response = await this._http.post(this.url + 'c', params, { headers: headers }).toPromise();
+            const res = response.json();
+            if (!res.entidad) {
+                return null;
+            }
+            return res.entidad;
+        } catch (error) {
+            await console.log('ERROR: ', error);
+        }
+    }
+
     crearPaqueteCliente(cliente, telefono, direccion, factura, token) {
         const params = {
             cliente: cliente,

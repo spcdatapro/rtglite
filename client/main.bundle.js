@@ -398,6 +398,7 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.logOut = function () {
         this._ls.clear('restouchusr');
         this._ls.clear('gcode');
+        this._ls.clear('m1nt');
         this.goToUrl({ url: '' });
     };
     AppComponent.prototype.toggleMenu = function () { this.menuVisible = !this.menuVisible; };
@@ -451,8 +452,10 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__components_reportes_visorpdf_component__ = __webpack_require__("./src/app/components/reportes/visorpdf.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_23__components_reportes_ventas_ventasvarios_component__ = __webpack_require__("./src/app/components/reportes/ventas/ventasvarios.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_24__services_gapi_service__ = __webpack_require__("./src/app/services/gapi.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__services_diccionariofox_service__ = __webpack_require__("./src/app/services/diccionariofox.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__pipes_filterlist_pipe__ = __webpack_require__("./src/app/pipes/filterlist.pipe.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_25__services_comanda_service__ = __webpack_require__("./src/app/services/comanda.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_26__services_diccionariofox_service__ = __webpack_require__("./src/app/services/diccionariofox.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_27__services_cliente_service__ = __webpack_require__("./src/app/services/cliente.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_28__pipes_filterlist_pipe__ = __webpack_require__("./src/app/pipes/filterlist.pipe.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -486,6 +489,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 // Servicios
 
+// import { MintService } from './services/mint.service';
+
+
 
 // Pipes
 
@@ -495,7 +501,7 @@ var AppModule = /** @class */ (function () {
     AppModule = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_2__angular_core__["NgModule"])({
             declarations: [
-                __WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */], __WEBPACK_IMPORTED_MODULE_12__components_login_login_component__["a" /* LoginComponent */], __WEBPACK_IMPORTED_MODULE_13__components_cliente_lstclientes_component__["a" /* ListadoClientesComponent */], __WEBPACK_IMPORTED_MODULE_14__components_cliente_cliente_component__["a" /* ClienteComponent */], __WEBPACK_IMPORTED_MODULE_26__pipes_filterlist_pipe__["a" /* FilterListPipe */], __WEBPACK_IMPORTED_MODULE_15__components_comanda_lstcomandas_component__["a" /* ListaComandasComponent */],
+                __WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */], __WEBPACK_IMPORTED_MODULE_12__components_login_login_component__["a" /* LoginComponent */], __WEBPACK_IMPORTED_MODULE_13__components_cliente_lstclientes_component__["a" /* ListadoClientesComponent */], __WEBPACK_IMPORTED_MODULE_14__components_cliente_cliente_component__["a" /* ClienteComponent */], __WEBPACK_IMPORTED_MODULE_28__pipes_filterlist_pipe__["a" /* FilterListPipe */], __WEBPACK_IMPORTED_MODULE_15__components_comanda_lstcomandas_component__["a" /* ListaComandasComponent */],
                 __WEBPACK_IMPORTED_MODULE_17__components_mnurest_mnurest_component__["a" /* MenuRestauranteComponent */], __WEBPACK_IMPORTED_MODULE_18__components_mntvarios_mntvarios_component__["a" /* MantenimientosVariosComponent */], __WEBPACK_IMPORTED_MODULE_16__components_comanda_comanda_component__["a" /* ComandaComponent */], __WEBPACK_IMPORTED_MODULE_19__components_diccionariofox_diccionariofox_component__["a" /* DiccionarioFoxComponent */], __WEBPACK_IMPORTED_MODULE_20__components_clock_clock_component__["a" /* ClockComponent */], __WEBPACK_IMPORTED_MODULE_21__components_usuario_usuario_component__["a" /* UsuarioComponent */],
                 __WEBPACK_IMPORTED_MODULE_22__components_reportes_visorpdf_component__["a" /* VisorPDFComponent */], __WEBPACK_IMPORTED_MODULE_23__components_reportes_ventas_ventasvarios_component__["a" /* VentasVariosComponent */]
             ],
@@ -504,7 +510,7 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_9_angular2_moment__["MomentModule"], __WEBPACK_IMPORTED_MODULE_10__angular_common_http__["b" /* HttpClientModule */]
             ],
             providers: [
-                __WEBPACK_IMPORTED_MODULE_5__app_routing__["a" /* appRoutingProviders */], __WEBPACK_IMPORTED_MODULE_24__services_gapi_service__["a" /* GoogleApiService */], __WEBPACK_IMPORTED_MODULE_25__services_diccionariofox_service__["a" /* DiccionarioFoxService */]
+                __WEBPACK_IMPORTED_MODULE_5__app_routing__["a" /* appRoutingProviders */], __WEBPACK_IMPORTED_MODULE_24__services_gapi_service__["a" /* GoogleApiService */], __WEBPACK_IMPORTED_MODULE_26__services_diccionariofox_service__["a" /* DiccionarioFoxService */], __WEBPACK_IMPORTED_MODULE_25__services_comanda_service__["a" /* ComandaService */], __WEBPACK_IMPORTED_MODULE_27__services_cliente_service__["a" /* ClienteService */]
             ],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_11__app_component__["a" /* AppComponent */]]
         })
@@ -1321,7 +1327,7 @@ var ComandaComponent = /** @class */ (function () {
         this.telefonoClienteObj = new __WEBPACK_IMPORTED_MODULE_3__models_telefonocliente__["a" /* TelefonoCliente */](null, null, null, false);
         this.direccionClienteObj = new __WEBPACK_IMPORTED_MODULE_4__models_direccioncliente__["a" /* DireccionCliente */](null, null, null, null, null, null, null, null, false);
         this.carta = new Array();
-        this.comanda = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], null, false);
+        this.comanda = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], null, null, false);
         this.detalleComanda = [];
         this.detcom = new __WEBPACK_IMPORTED_MODULE_7__models_detallecomanda__["a" /* DetalleComanda */](null, 1, null, null, '', [], [], null, null, null, false);
         this.detcompo = new __WEBPACK_IMPORTED_MODULE_8__models_detcompdetcomanda__["a" /* DetalleComponenteDetalleComanda */](null, null, [], false);
@@ -1636,7 +1642,7 @@ var ComandaComponent = /** @class */ (function () {
         });
     };
     ComandaComponent.prototype.cancelaPedido = function () {
-        this.comanda = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], null, false);
+        this.comanda = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], null, null, false);
         this._router.navigate(['/comandas']);
     };
     ComandaComponent.prototype.selectDireccionesCliente = function (modalSelDireccionCliente) {
@@ -2138,32 +2144,52 @@ var ComandaComponent = /** @class */ (function () {
     };
     ComandaComponent.prototype.guardarComanda = function () {
         var _this = this;
-        // this.comanda._id = this.comandaOriginal._id;
-        // this.comanda.fecha = this.comandaOriginal.fecha;
-        // this.comanda.fechainitoma = this.comandaOriginal.fecha;
-        // this.comanda.fechafintoma = this.comandaOriginal.fecha;
+        if (this.comandaOriginal && this.comandaOriginal._id && this.comandaOriginal._id.trim() !== '') {
+            this.comanda._id = this.comandaOriginal._id;
+            this.comanda.fecha = this.comandaOriginal.fecha;
+            this.comanda.fechainitoma = this.comandaOriginal.fecha;
+            this.comanda.fechafintoma = this.comandaOriginal.fecha;
+            this.comanda.tracking = this.comandaOriginal.tracking;
+        }
         this.comanda.detallecomanda = this.detalleComanda;
-        // this.comanda.tracking = this.comandaOriginal.tracking;
         this.comanda.idestatuscomanda = '59fea7524218672b285ab0e3';
         this.comanda.iddatosfacturacliente =
             this.comandaOriginal.iddatosfacturacliente ? this.comandaOriginal.iddatosfacturacliente._id : null;
         this.comanda.totalcomanda = 0.00;
         // console.log(this.comanda);
         this.comanda.fechafintoma = __WEBPACK_IMPORTED_MODULE_32_moment__().toDate();
-        this._comandaService.crearComanda(this.comanda, this.token).subscribe(function (response) {
-            if (!response.entidad) {
-                _this.toasterService.pop('error', 'Error', 'Error: ' + response.mensaje);
-            }
-            else {
-                var trackingNo = response.entidad.tracking;
-                var idcomanda = response.entidad._id;
-                _this.comanda = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], null, false);
-                _this.printComanda(trackingNo, idcomanda);
-            }
-        }, function (error) {
-            var respuesta = JSON.parse(error._body);
-            _this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
-        });
+        if (this.comandaOriginal && this.comandaOriginal._id && this.comandaOriginal._id.trim() !== '') {
+            this._comandaService.modificarComanda(this.comanda, this.token).subscribe(function (response) {
+                if (!response.entidad) {
+                    _this.toasterService.pop('error', 'Error', 'Error: ' + response.mensaje);
+                }
+                else {
+                    var trackingNo = response.entidad.tracking;
+                    var idcomanda = response.entidad._id;
+                    _this.comanda = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], null, null, false);
+                    _this.printComanda(trackingNo, idcomanda);
+                }
+            }, function (error) {
+                var respuesta = JSON.parse(error._body);
+                _this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+            });
+        }
+        else {
+            this._comandaService.crearComanda(this.comanda, this.token).subscribe(function (response) {
+                if (!response.entidad) {
+                    _this.toasterService.pop('error', 'Error', 'Error: ' + response.mensaje);
+                }
+                else {
+                    var trackingNo = response.entidad.tracking;
+                    var idcomanda = response.entidad._id;
+                    _this.comanda = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, 0, 0, [], [], [], null, null, null, null, [], null, null, false);
+                    _this.printComanda(trackingNo, idcomanda);
+                }
+            }, function (error) {
+                var respuesta = JSON.parse(error._body);
+                _this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+            });
+        }
     };
     //#region Historico
     ComandaComponent.prototype.guardarHistorica = function () {
@@ -2227,7 +2253,7 @@ var ComandaComponent = /** @class */ (function () {
 /***/ "./src/app/components/comanda/lstcomandas.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container-fluid\" style=\"margin-top: 10px\">\r\n    <div class=\"row justify-content-center\">\r\n        <div class=\"col-6 text-center\">\r\n            <button type=\"button\" class=\"btn btn-outline-success btn-block btn-lg\" (click)=\"nuevoPedido(modalNuevoPedido)\">AGREGAR PEDIDO</button>\r\n           <!--<input id=\"srchCli\" type=\"text\" class=\"form-control\" minlength=\"8\" maxlength=\"8\" pattern=\"[0-9]+\" (keyup.enter)=\"buscarCliente(modalSelCliente, modalNuevoCliente)\" \r\n                #srchCli=\"ngModel\" [(ngModel)]=\"telABuscar\" placeholder=\"Teléfono del cliente...\"/>-->\r\n        </div>\r\n    </div>    \r\n    <hr/>\r\n    <div class=\"row\" *ngIf=\"false\">\r\n        <div class=\"col-12\">\r\n            <div>                \r\n                <span style=\"padding-right: 2px !important\" *ngFor=\"let cnt of contadores\">\r\n                    <button type=\"button\" class=\"btn\" [style.background-color]=\"cnt._id.color\" style=\"color: lightgray; font-weight: bold\" (click)=\"loadComandasEnhanced(cnt._id._id)\">\r\n                        {{cnt._id.descripcion}}\r\n                        <span class=\"badge badge-dark badge-pill\">{{cnt.count}}</span>\r\n                    </button>\r\n                </span>\r\n                \r\n                <span style=\"padding-right: 2px !important\">\r\n                    <button type=\"button\" class=\"btn btn-primary\" style=\"color: lightgray; font-weight: bold\" (click)=\"loadComandasEnhanced()\" *ngIf=\"contadores.length > 0\">\r\n                        Todas\r\n                    </button>\r\n                </span>                \r\n            </div>            \r\n        </div>\r\n    </div>\r\n    <div class=\"row justify-content-center\" style=\"padding-top: 10px;\">\r\n        <div class=\"col-5\">\r\n            <input type=\"text\" class=\"form-control\" #fltrCliente=\"ngModel\" [(ngModel)]=\"filtroCliente\"\r\n                [ngModelOptions]=\"{standalone: true}\" placeholder=\"Buscar comanda por nombre de cliente...\" />\r\n        </div>\r\n        <div class=\"col-1 text-right font-weight-bold\">Del:</div>\r\n        <div class=\"col-2\">\r\n            <input type=\"date\" class=\"form-control\" #fltrFDel=\"ngModel\" [(ngModel)]=\"fdel\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Del\" required/>\r\n        </div>\r\n        <div class=\"col-1 text-right font-weight-bold\">Al:</div>\r\n        <div class=\"col-3\">\r\n            <div class=\"input-group\">\r\n                <input type=\"date\" class=\"form-control\" #fltrFAl=\"ngModel\" [(ngModel)]=\"fal\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Al\" required/>\r\n                <span class=\"input-group-btn\">\r\n                    <button type=\"button\" class=\"btn btn-secondary\" (click)=\"loadComandasEnhanced(); loadContadores()\">\r\n                        <span class=\"oi oi-magnifying-glass\" title=\"Filtrar por fechas\" aria-hidden=\"true\"></span>\r\n                    </button>\r\n                </span>\r\n            </div>            \r\n        </div>\r\n    </div>\r\n    <hr/>\r\n    <div class=\"row\" *ngFor=\"let cmd of listaComandas | filterList:'idcliente.nombre':filtroCliente; let i = index\">\r\n        <div class=\"col-2\">\r\n            <table style=\"width: 100%; border-collapse: collapse;\">\r\n                <tr>\r\n                    <td>\r\n                        <span class=\"font-weight-bold\" style=\"font-size: 1.5em !important;\">\r\n                             {{cmd.fechafintoma | date:'HH:mm:ss'}}\r\n                        </span>                        \r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td>{{cmd.fechafintoma | date:'dd/MM/yyyy'}}</td>\r\n                </tr>\r\n                <tr>\r\n                    <td>                        \r\n                        <img class=\"rounded\" src=\"../../../assets/{{cmd.idtipocomanda.imagen}}\" alt=\"{{cmd.idtipocomanda.descripcion}}\">\r\n                    </td>\r\n                </tr>\r\n                <tr *ngIf=\"false\">\r\n                    <td class=\"text-center font-weight-bold\" style=\"padding-top: 1em; font-size: 1.25em\">\r\n                        Total: Q {{cmd.totalcomanda | number:'1.2-2'}}<br/>\r\n                        <img class=\"rounded\" *ngFor=\"let ifp of cmd.imgpago\" src=\"../../../assets/{{ifp}}.png\" alt=\"FP\">\r\n                    </td>\r\n                </tr>\r\n            </table>\r\n        </div>\r\n        <div class=\"col-10\">            \r\n            <table style=\"width: 100%; border-collapse: collapse;\">\r\n                <tr>\r\n                    <td colspan=\"2\">\r\n                        <h4>\r\n                            Orden No. {{cmd.tracking | number:'1.0-0'}} a nombre de {{cmd.idcliente.nombre}}&nbsp;\r\n                            <button type=\"button\" class=\"btn btn-outline-secondary btn-sm\" (click)=\"verDetCobro(cmd, modalDetCobroComanda)\" *ngIf=\"cmd.detcobrocomanda && cmd.detcobrocomanda.length > 0\">Detalle de cobro</button>\r\n                            <button type=\"button\" class=\"btn btn-outline-secondary btn-sm\" (click)=\"goToUrl(cmd)\" *ngIf=\"cmd.idestatuscomanda._id != '59fea7bc4218672b285ab0e6'\">Editar</button>\r\n                            <button type=\"button\" class=\"btn btn-outline-warning btn-sm\" (click)=\"printComanda(cmd.tracking, cmd._id)\">IMPRIMIR</button>\r\n                        </h4>                        \r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top\">Transcurrido:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top; font-weight: bold;\">{{cmd.fechafintoma | amTimeAgo:true}}</td>\r\n                </tr>\r\n                <tr *ngIf=\"false\">\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top\">Teléfono:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">{{cmd.idtelefonocliente.telefono}}</td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Atendió:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">{{cmd.idusuario.nombre}}</td>\r\n                </tr>\r\n                <tr *ngIf=\"cmd.iddireccioncliente && cmd.idtipocomanda == '59fff327596e572d9cdac917'\">\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Entregar en:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">\r\n                         {{cmd.iddireccioncliente.direccion}}, zona {{cmd.iddireccioncliente.zona}}, colonia {{cmd.iddireccioncliente.colonia}} \r\n                         {{cmd.iddireccioncliente.codigoacceso ? (', código de acceso: ' + cmd.iddireccioncliente.codigoacceso) : ''}}\r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Restaurante:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">\r\n                        {{cmd.idrestaurante ? cmd.idrestaurante.nombre : (cmd.iddireccioncliente ? cmd.iddireccioncliente.idrestaurante.nombre : '')}}\r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Tiempo ofrecido:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">\r\n                        {{cmd.idtiempoentrega ? cmd.idtiempoentrega.tiempo : ''}}\r\n                    </td>\r\n                </tr>\r\n                <tr *ngIf=\"cmd.iddireccioncliente && cmd.idtipocomanda == '59fff327596e572d9cdac917'\">\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Motorista:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">{{cmd.idmotorista ? cmd.idmotorista.nombre : ''}}</td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Observaciones:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">\r\n                        <p>{{cmd.notas || 'No tiene'}}</p>\r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" colspan=\"2\" [style.color]=\"cmd.idestatuscomanda.color\">\r\n                        <h3>{{cmd.idestatuscomanda.descripcion}}</h3>\r\n                    </td>                    \r\n                </tr>\r\n                <tr>\r\n                    <td colspan=\"2\">                        \r\n                        <table style=\"width: 100%; border-collapse:collapse; border: solid 0.1em lightgray\">\r\n                            <tr style=\"background-color: #FFFEE0\" *ngFor=\"let det of cmd.detallecomanda\">\r\n                                <td>                                   \r\n                                    <table style=\"width: 100%; border-collapse:collapse;\">\r\n                                        <tr>                                            \r\n                                            <td>                                                \r\n                                                <table style=\"width: 100%; border-collapse: collapse;\">\r\n                                                    <tr>\r\n                                                        <td class=\"align-top\">{{det.cantidad}} {{det.descripcion}}</td>\r\n                                                    </tr>\r\n                                                    <tr *ngFor=\"let dce of det.extrasnotas\">\r\n                                                        <td class=\"align-top\" style=\"padding-left: 2em;\">\r\n                                                            <span *ngIf=\"dce.esextra\">\r\n                                                                <strong style=\"font-size: 12pt\">+</strong> {{dce.descripcion}}</span>\r\n                                                            <p *ngIf=\"!dce.esextra\">\r\n                                                                <strong>N:</strong> {{dce.notas}}</p>\r\n                                                        </td>                                                        \r\n                                                    </tr>\r\n                                                </table>\r\n                                            </td>\r\n                                        </tr>\r\n                                        <tr *ngFor=\"let compo of det.componentes\">\r\n                                            <td style=\"padding-left: 2em\">\r\n                                                <table style=\"width: 100%; border-collapse:collapse;\">\r\n                                                    <tr>\r\n                                                        <td>{{compo.descripcion}}</td>                                                        \r\n                                                    </tr>\r\n                                                    <tr *ngFor=\"let ext of compo.extrasnotas\">\r\n                                                        <td style=\"padding-left: 1em\">\r\n                                                            <span *ngIf=\"ext.esextra\">\r\n                                                                <strong style=\"font-size: 12pt\">+</strong> {{ext.descripcion}}\r\n                                                            </span>\r\n                                                            <p *ngIf=\"!ext.esextra\">\r\n                                                                <strong>N:</strong> {{ext.notas}}\r\n                                                            </p>\r\n                                                        </td>                                                        \r\n                                                    </tr>\r\n                                                </table>                                                \r\n                                            </td>\r\n                                        </tr>\r\n                                    </table>\r\n                                </td>                                \r\n                            </tr>\r\n                        </table>\r\n                    </td>\r\n                </tr>\r\n            </table>\r\n        </div>\r\n    </div>\r\n</div>\r\n<ng-template #modalNuevoPedido let-c=\"close\" let-d=\"dismiss\">\r\n    <div class=\"modal-header\">\r\n        <h4 class=\"modal-title\">¿A nombre de quién está el pedido?</h4>\r\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"d('Cross click')\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div class=\"card\">\r\n            <div class=\"row\">\r\n                <div class=\"col-12\">\r\n                    <input id=\"txtNombreDe\" name=\"txtNombreDe\" #nombreDe type=\"text\" class=\"form-control form-control-sm\" placeholder=\"Nombre\" />\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-footer\">\r\n        <button type=\"button\" class=\"btn btn-outline-primary\" aria-label=\"Close\" (click)=\"c(nombreDe.value)\">\r\n            <span class=\"oi oi-check\" title=\"Guardar\" aria-hidden=\"true\"></span>\r\n        </button>\r\n    </div>\r\n</ng-template>\r\n<ng-template #modalSelCliente let-c=\"close\" let-d=\"dismiss\">\r\n    <div class=\"modal-header\">\r\n        <h4 class=\"modal-title\">¿Quién está llamando?</h4>\r\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"d('Cross click')\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div class=\"card\">\r\n            <ul class=\"list-group list-group-flush\">                 \r\n                <li class=\"list-group-item\" *ngFor=\"let cli of listaClientes\" (click)=\"c(cli._id)\">{{cli.nombre}}</li>\r\n            </ul>\r\n        </div>\r\n    </div>    \r\n</ng-template>\r\n<ng-template #modalDetCobroComanda let-c=\"close\" let-d=\"dismiss\">\r\n    <div class=\"modal-header\">\r\n        <h4 class=\"modal-title\">Detalles de cobro</h4>\r\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"d('Cross click')\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n    </div>\r\n    <div class=\"modal-body\" style=\"height: 700px; overflow-y:auto\">\r\n        <table class=\"table table-hover table-sm table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th colspan=\"3\">Formas de pago</th>\r\n                </tr>\r\n            </thead>\r\n            <tfoot>\r\n                <tr>\r\n                    <th class=\"text-right\" colspan=\"2\">Total de comanda:</th>\r\n                    <th class=\"text-right\" style=\"border-bottom: double 0.25em lightgray !important;\">{{comandaSelected.totalcomanda | number:'1.2-2'}}</th>\r\n                </tr>\r\n            </tfoot>\r\n            <tbody>\r\n                <tr *ngFor=\"let fp of resumenCobro\">\r\n                    <td>\r\n                        <img class=\"rounded\" src=\"{{fp.imagen}}\" alt=\"{{fp.descripcion}}\">\r\n                    </td>\r\n                    <td>{{fp.descripcion}}</td>\r\n                    <td class=\"text-right\">{{fp.monto | number:'1.2-2'}}</td>\r\n                </tr>                \r\n            </tbody>\r\n        </table>\r\n        <hr/>\r\n        <table class=\"table table-hover table-sm table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th colspan=\"3\">Facturar a</th>\r\n                </tr>\r\n                <tr>\r\n                    <th>N.I.T.</th>\r\n                    <th>Nombre</th>\r\n                    <th class=\"text-right\">Monto</th>\r\n                </tr>\r\n            </thead>\r\n            <tfoot>\r\n                <tr>\r\n                    <th colspan=\"2\" class=\"text-right\">Total de comanda:</th>\r\n                    <th class=\"text-right\" style=\"border-bottom: double 0.25em lightgray !important;\">{{comandaSelected.totalcomanda | number:'1.2-2'}}</th>\r\n                </tr>\r\n            </tfoot>\r\n            <tbody>\r\n                <tr *ngFor=\"let facta of comandaSelected.detfacturara\">\r\n                    <td>{{facta.nit}}</td>\r\n                    <td>{{facta.nombre}}</td>\r\n                    <td class=\"text-right\">{{facta.monto | number:'1.2-2'}}</td>\r\n                </tr>                \r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</ng-template>\r\n<ng-template #modalNuevoCliente let-c=\"close\" let-d=\"dismiss\">\r\n    <div class=\"modal-header\">\r\n        <h4 class=\"modal-title\">Datos de cliente</h4>\r\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"d('Cross click')\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div class=\"card\">\r\n            <div class=\"card-header\">Nombre y teléfono:</div>\r\n            <div class=\"card-body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-8\">\r\n                        <input id=\"txtNombreCliente\" name=\"txtNombreCliente\" #nombreCliente=\"ngModel\" [(ngModel)]=\"clienteNuevo.nombre\" type=\"text\"\r\n                            class=\"form-control form-control-sm\" placeholder=\"Nombre\" />\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <input id=\"txtTelefonoCliente\" name=\"txtTelefonoCliente\" #telefonoCliente=\"ngModel\" [(ngModel)]=\"telefonoNuevo.telefono\"\r\n                            type=\"text\" minlength=\"8\" maxlength=\"8\" class=\"form-control form-control-sm\" placeholder=\"Teléfono\"/>\r\n                    </div>\r\n                </div>\r\n                \r\n            </div>\r\n        </div>        \r\n        <div class=\"card\">\r\n            <div class=\"card-header\">Dirección:</div>\r\n            <div class=\"card-body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-12\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtDirCli\">Dirección:</label>\r\n                            <input name=\"txtDirCli\" id=\"txtDirCli\" type=\"text\" class=\"form-control form-control-sm\" #direccionCliente=\"ngModel\" [(ngModel)]=\"direccionNueva.direccion\"\r\n                                placeholder=\"Dirección\" />\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"row\">\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtZonaCli\">Zona:</label>\r\n                            <input name=\"txtZonaCli\" id=\"txtZonaCli\" type=\"number\" class=\"form-control form-control-sm\" #zonaCliente=\"ngModel\" [(ngModel)]=\"direccionNueva.zona\"\r\n                                placeholder=\"Zona\" min=\"0\" />\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtColoniaCli\">Colonia:</label>\r\n                            <input name=\"txtColoniaCli\" id=\"txtColoniaCli\" type=\"text\" class=\"form-control form-control-sm\" #coloniaCliente=\"ngModel\"\r\n                                [(ngModel)]=\"direccionNueva.colonia\" placeholder=\"Colonia\" />\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtCodAccCli\">Código de acceso:</label>\r\n                            <input name=\"txtCodAccCli\" id=\"txtCodAccCli\" type=\"text\" class=\"form-control form-control-sm\" #codigoaccesoCliente=\"ngModel\"\r\n                                [(ngModel)]=\"direccionNueva.codigoacceso\" placeholder=\"Código de acceso\" />\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"row\">\r\n                    <div class=\"col-6\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"selTipoDirCli\">Tipo de dirección:</label>\r\n                            <select name=\"selTipoDirCli\" id=\"selTipoDirCli\" class=\"form-control form-control-sm\" #tipoDireccionCliente=\"ngModel\"\r\n                                [(ngModel)]=\"direccionNueva.idtipodireccion\">\r\n                                <option *ngFor=\"let td of tiposDireccion\" [ngValue]=\"td._id\">{{td.descripcion}}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-6\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"selRestCli\">Atiende:</label>\r\n                            <select name=\"selRestCli\" id=\"selRestCli\" class=\"form-control form-control-sm\" #restauranteCliente=\"ngModel\" [(ngModel)]=\"direccionNueva.idrestaurante\">\r\n                                <option *ngFor=\"let rest of restaurantes\" [ngValue]=\"rest._id\">{{rest.nombre}}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"card\">\r\n            <div class=\"card-header\">Datos de facturación:</div>\r\n            <div class=\"card-body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtNit\">N.I.T.:</label>\r\n                            <input name=\"txtNit\" id=\"txtNit\" type=\"text\" class=\"form-control form-control-sm\" #nitCliente=\"ngModel\"\r\n                                [(ngModel)]=\"facturaNueva.nit\" placeholder=\"N.I.T.\"/>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtNomFact\">Nombre:</label>\r\n                            <input name=\"txtNomFact\" id=\"txtNomFact\" type=\"text\" class=\"form-control form-control-sm\" #nombreFacturaCliente=\"ngModel\"\r\n                                [(ngModel)]=\"facturaNueva.nombre\" placeholder=\"Nombre\"/>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtDirFact\">Dirección:</label>\r\n                            <input name=\"txtDirFact\" id=\"txtDirFact\" type=\"text\" class=\"form-control form-control-sm\" #direccionFacturaCliente=\"ngModel\"\r\n                                [(ngModel)]=\"facturaNueva.direccion\" placeholder=\"Dirección\"/>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-footer justify-content-end\">\r\n        <div class=\"btn-group-sm\">\r\n            <button type=\"button\" class=\"btn btn-sm btn-outline-warning\" (click)=\"d('')\">Cancelar</button>\r\n            <button type=\"button\" class=\"btn btn-sm btn-outline-success\" (click)=\"c('')\">Guardar y continuar...</button>\r\n        </div>\r\n    </div>\r\n</ng-template>\r\n<toaster-container [toasterconfig]=\"toasterconfig\"></toaster-container>"
+module.exports = "<div class=\"container-fluid\" style=\"margin-top: 10px\">\r\n    <div class=\"row justify-content-center\" *ngIf=\"false\">\r\n        <div class=\"col-6 text-center\">\r\n            <button type=\"button\" class=\"btn btn-outline-success btn-block btn-lg\" (click)=\"nuevoPedido(modalNuevoPedido)\">AGREGAR PEDIDO</button>\r\n           <!--<input id=\"srchCli\" type=\"text\" class=\"form-control\" minlength=\"8\" maxlength=\"8\" pattern=\"[0-9]+\" (keyup.enter)=\"buscarCliente(modalSelCliente, modalNuevoCliente)\" \r\n                #srchCli=\"ngModel\" [(ngModel)]=\"telABuscar\" placeholder=\"Teléfono del cliente...\"/>-->\r\n        </div>\r\n    </div>    \r\n    <hr *ngIf=\"false\"/>\r\n    <div class=\"row\" *ngIf=\"false\">\r\n        <div class=\"col-12\">\r\n            <div>                \r\n                <span style=\"padding-right: 2px !important\" *ngFor=\"let cnt of contadores\">\r\n                    <button type=\"button\" class=\"btn\" [style.background-color]=\"cnt._id.color\" style=\"color: lightgray; font-weight: bold\" (click)=\"loadComandasEnhanced(cnt._id._id)\">\r\n                        {{cnt._id.descripcion}}\r\n                        <span class=\"badge badge-dark badge-pill\">{{cnt.count}}</span>\r\n                    </button>\r\n                </span>\r\n                \r\n                <span style=\"padding-right: 2px !important\">\r\n                    <button type=\"button\" class=\"btn btn-primary\" style=\"color: lightgray; font-weight: bold\" (click)=\"loadComandasEnhanced()\" *ngIf=\"contadores.length > 0\">\r\n                        Todas\r\n                    </button>\r\n                </span>                \r\n            </div>            \r\n        </div>\r\n    </div>\r\n    <div class=\"row justify-content-center\" style=\"padding-top: 10px;\">\r\n        <div class=\"col-5\">\r\n            <input type=\"text\" class=\"form-control\" #fltrCliente=\"ngModel\" [(ngModel)]=\"filtroCliente\"\r\n                [ngModelOptions]=\"{standalone: true}\" placeholder=\"Buscar comanda por nombre de cliente...\" />\r\n        </div>\r\n        <div class=\"col-1 text-right font-weight-bold\">Del:</div>\r\n        <div class=\"col-2\">\r\n            <input type=\"date\" class=\"form-control\" #fltrFDel=\"ngModel\" [(ngModel)]=\"fdel\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Del\" required/>\r\n        </div>\r\n        <div class=\"col-1 text-right font-weight-bold\">Al:</div>\r\n        <div class=\"col-3\">\r\n            <div class=\"input-group\">\r\n                <input type=\"date\" class=\"form-control\" #fltrFAl=\"ngModel\" [(ngModel)]=\"fal\" [ngModelOptions]=\"{standalone: true}\" placeholder=\"Al\" required/>\r\n                <span class=\"input-group-btn\">\r\n                    <button type=\"button\" class=\"btn btn-secondary\" (click)=\"loadComandasEnhanced(); loadContadores()\">\r\n                        <span class=\"oi oi-magnifying-glass\" title=\"Filtrar por fechas\" aria-hidden=\"true\"></span>\r\n                    </button>\r\n                </span>\r\n            </div>            \r\n        </div>\r\n    </div>\r\n    <hr/>\r\n    <div class=\"row\" *ngFor=\"let cmd of listaComandas | filterList:'idcliente.nombre':filtroCliente; let i = index\">\r\n        <div class=\"col-2\">\r\n            <table style=\"width: 100%; border-collapse: collapse;\">\r\n                <tr>\r\n                    <td>\r\n                        <span class=\"font-weight-bold\" style=\"font-size: 1.5em !important;\">\r\n                             {{cmd.fechafintoma | date:'HH:mm:ss'}}\r\n                        </span>                        \r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td>{{cmd.fechafintoma | date:'dd/MM/yyyy'}}</td>\r\n                </tr>\r\n                <tr>\r\n                    <td>                        \r\n                        <img class=\"rounded\" src=\"../../../assets/{{cmd.idtipocomanda.imagen}}\" alt=\"{{cmd.idtipocomanda.descripcion}}\">\r\n                    </td>\r\n                </tr>\r\n                <tr *ngIf=\"false\">\r\n                    <td class=\"text-center font-weight-bold\" style=\"padding-top: 1em; font-size: 1.25em\">\r\n                        Total: Q {{cmd.totalcomanda | number:'1.2-2'}}<br/>\r\n                        <img class=\"rounded\" *ngFor=\"let ifp of cmd.imgpago\" src=\"../../../assets/{{ifp}}.png\" alt=\"FP\">\r\n                    </td>\r\n                </tr>\r\n            </table>\r\n        </div>\r\n        <div class=\"col-10\">            \r\n            <table style=\"width: 100%; border-collapse: collapse;\">\r\n                <tr>\r\n                    <td colspan=\"2\">\r\n                        <h4>\r\n                            Orden No. {{cmd.tracking | number:'1.0-0'}} a nombre de {{cmd.idcliente.nombre}}&nbsp;\r\n                            <button type=\"button\" class=\"btn btn-outline-secondary btn-sm\" (click)=\"verDetCobro(cmd, modalDetCobroComanda)\" *ngIf=\"cmd.detcobrocomanda && cmd.detcobrocomanda.length > 0\">Detalle de cobro</button>\r\n                            <button type=\"button\" class=\"btn btn-outline-secondary btn-sm\" (click)=\"goToUrl(cmd)\" *ngIf=\"cmd.idestatuscomanda._id != '59fea7bc4218672b285ab0e6'\">Editar</button>\r\n                            <button type=\"button\" class=\"btn btn-outline-warning btn-sm\" (click)=\"printComanda(cmd.tracking, cmd._id)\">IMPRIMIR</button>\r\n                        </h4>                        \r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top\">Transcurrido:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top; font-weight: bold;\">{{cmd.fechafintoma | amTimeAgo:true}}</td>\r\n                </tr>\r\n                <tr *ngIf=\"false\">\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top\">Teléfono:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">{{cmd.idtelefonocliente.telefono}}</td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Atendió:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">{{cmd.idusuario.nombre}}</td>\r\n                </tr>\r\n                <tr *ngIf=\"cmd.iddireccioncliente && cmd.idtipocomanda == '59fff327596e572d9cdac917'\">\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Entregar en:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">\r\n                         {{cmd.iddireccioncliente.direccion}}, zona {{cmd.iddireccioncliente.zona}}, colonia {{cmd.iddireccioncliente.colonia}} \r\n                         {{cmd.iddireccioncliente.codigoacceso ? (', código de acceso: ' + cmd.iddireccioncliente.codigoacceso) : ''}}\r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Restaurante:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">\r\n                        {{cmd.idrestaurante ? cmd.idrestaurante.nombre : (cmd.iddireccioncliente ? cmd.iddireccioncliente.idrestaurante.nombre : '')}}\r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Tiempo ofrecido:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">\r\n                        {{cmd.idtiempoentrega ? cmd.idtiempoentrega.tiempo : ''}}\r\n                    </td>\r\n                </tr>\r\n                <tr *ngIf=\"cmd.iddireccioncliente && cmd.idtipocomanda == '59fff327596e572d9cdac917'\">\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Motorista:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">{{cmd.idmotorista ? cmd.idmotorista.nombre : ''}}</td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" style=\"vertical-align: top;\">Observaciones:</td>\r\n                    <td style=\"padding-left: 0.15em; vertical-align: top;\">\r\n                        <p>{{cmd.notas || 'No tiene'}}</p>\r\n                    </td>\r\n                </tr>\r\n                <tr>\r\n                    <td class=\"font-weight-bold\" colspan=\"2\" [style.color]=\"cmd.idestatuscomanda.color\">\r\n                        <h3>{{cmd.idestatuscomanda.descripcion}}</h3>\r\n                    </td>                    \r\n                </tr>\r\n                <tr>\r\n                    <td colspan=\"2\">                        \r\n                        <table style=\"width: 100%; border-collapse:collapse; border: solid 0.1em lightgray\">\r\n                            <tr style=\"background-color: #FFFEE0\" *ngFor=\"let det of cmd.detallecomanda\">\r\n                                <td>                                   \r\n                                    <table style=\"width: 100%; border-collapse:collapse;\">\r\n                                        <tr>                                            \r\n                                            <td>                                                \r\n                                                <table style=\"width: 100%; border-collapse: collapse;\">\r\n                                                    <tr>\r\n                                                        <td class=\"align-top\">{{det.cantidad}} {{det.descripcion}}</td>\r\n                                                    </tr>\r\n                                                    <tr *ngFor=\"let dce of det.extrasnotas\">\r\n                                                        <td class=\"align-top\" style=\"padding-left: 2em;\">\r\n                                                            <span *ngIf=\"dce.esextra\">\r\n                                                                <strong style=\"font-size: 12pt\">+</strong> {{dce.descripcion}}</span>\r\n                                                            <p *ngIf=\"!dce.esextra\">\r\n                                                                <strong>N:</strong> {{dce.notas}}</p>\r\n                                                        </td>                                                        \r\n                                                    </tr>\r\n                                                </table>\r\n                                            </td>\r\n                                        </tr>\r\n                                        <tr *ngFor=\"let compo of det.componentes\">\r\n                                            <td style=\"padding-left: 2em\">\r\n                                                <table style=\"width: 100%; border-collapse:collapse;\">\r\n                                                    <tr>\r\n                                                        <td>{{compo.descripcion}}</td>                                                        \r\n                                                    </tr>\r\n                                                    <tr *ngFor=\"let ext of compo.extrasnotas\">\r\n                                                        <td style=\"padding-left: 1em\">\r\n                                                            <span *ngIf=\"ext.esextra\">\r\n                                                                <strong style=\"font-size: 12pt\">+</strong> {{ext.descripcion}}\r\n                                                            </span>\r\n                                                            <p *ngIf=\"!ext.esextra\">\r\n                                                                <strong>N:</strong> {{ext.notas}}\r\n                                                            </p>\r\n                                                        </td>                                                        \r\n                                                    </tr>\r\n                                                </table>                                                \r\n                                            </td>\r\n                                        </tr>\r\n                                    </table>\r\n                                </td>                                \r\n                            </tr>\r\n                        </table>\r\n                    </td>\r\n                </tr>\r\n            </table>\r\n        </div>\r\n    </div>\r\n</div>\r\n<ng-template #modalNuevoPedido let-c=\"close\" let-d=\"dismiss\">\r\n    <div class=\"modal-header\">\r\n        <h4 class=\"modal-title\">¿A nombre de quién está el pedido?</h4>\r\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"d('Cross click')\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div class=\"card\">\r\n            <div class=\"row\">\r\n                <div class=\"col-12\">\r\n                    <input id=\"txtNombreDe\" name=\"txtNombreDe\" #nombreDe type=\"text\" class=\"form-control form-control-sm\" placeholder=\"Nombre\" />\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-footer\">\r\n        <button type=\"button\" class=\"btn btn-outline-primary\" aria-label=\"Close\" (click)=\"c(nombreDe.value)\">\r\n            <span class=\"oi oi-check\" title=\"Guardar\" aria-hidden=\"true\"></span>\r\n        </button>\r\n    </div>\r\n</ng-template>\r\n<ng-template #modalSelCliente let-c=\"close\" let-d=\"dismiss\">\r\n    <div class=\"modal-header\">\r\n        <h4 class=\"modal-title\">¿Quién está llamando?</h4>\r\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"d('Cross click')\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div class=\"card\">\r\n            <ul class=\"list-group list-group-flush\">                 \r\n                <li class=\"list-group-item\" *ngFor=\"let cli of listaClientes\" (click)=\"c(cli._id)\">{{cli.nombre}}</li>\r\n            </ul>\r\n        </div>\r\n    </div>    \r\n</ng-template>\r\n<ng-template #modalDetCobroComanda let-c=\"close\" let-d=\"dismiss\">\r\n    <div class=\"modal-header\">\r\n        <h4 class=\"modal-title\">Detalles de cobro</h4>\r\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"d('Cross click')\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n    </div>\r\n    <div class=\"modal-body\" style=\"height: 700px; overflow-y:auto\">\r\n        <table class=\"table table-hover table-sm table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th colspan=\"3\">Formas de pago</th>\r\n                </tr>\r\n            </thead>\r\n            <tfoot>\r\n                <tr>\r\n                    <th class=\"text-right\" colspan=\"2\">Total de comanda:</th>\r\n                    <th class=\"text-right\" style=\"border-bottom: double 0.25em lightgray !important;\">{{comandaSelected.totalcomanda | number:'1.2-2'}}</th>\r\n                </tr>\r\n            </tfoot>\r\n            <tbody>\r\n                <tr *ngFor=\"let fp of resumenCobro\">\r\n                    <td>\r\n                        <img class=\"rounded\" src=\"{{fp.imagen}}\" alt=\"{{fp.descripcion}}\">\r\n                    </td>\r\n                    <td>{{fp.descripcion}}</td>\r\n                    <td class=\"text-right\">{{fp.monto | number:'1.2-2'}}</td>\r\n                </tr>                \r\n            </tbody>\r\n        </table>\r\n        <hr/>\r\n        <table class=\"table table-hover table-sm table-striped\">\r\n            <thead>\r\n                <tr>\r\n                    <th colspan=\"3\">Facturar a</th>\r\n                </tr>\r\n                <tr>\r\n                    <th>N.I.T.</th>\r\n                    <th>Nombre</th>\r\n                    <th class=\"text-right\">Monto</th>\r\n                </tr>\r\n            </thead>\r\n            <tfoot>\r\n                <tr>\r\n                    <th colspan=\"2\" class=\"text-right\">Total de comanda:</th>\r\n                    <th class=\"text-right\" style=\"border-bottom: double 0.25em lightgray !important;\">{{comandaSelected.totalcomanda | number:'1.2-2'}}</th>\r\n                </tr>\r\n            </tfoot>\r\n            <tbody>\r\n                <tr *ngFor=\"let facta of comandaSelected.detfacturara\">\r\n                    <td>{{facta.nit}}</td>\r\n                    <td>{{facta.nombre}}</td>\r\n                    <td class=\"text-right\">{{facta.monto | number:'1.2-2'}}</td>\r\n                </tr>                \r\n            </tbody>\r\n        </table>\r\n    </div>\r\n</ng-template>\r\n<ng-template #modalNuevoCliente let-c=\"close\" let-d=\"dismiss\">\r\n    <div class=\"modal-header\">\r\n        <h4 class=\"modal-title\">Datos de cliente</h4>\r\n        <button type=\"button\" class=\"close\" aria-label=\"Close\" (click)=\"d('Cross click')\">\r\n            <span aria-hidden=\"true\">&times;</span>\r\n        </button>\r\n    </div>\r\n    <div class=\"modal-body\">\r\n        <div class=\"card\">\r\n            <div class=\"card-header\">Nombre y teléfono:</div>\r\n            <div class=\"card-body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-8\">\r\n                        <input id=\"txtNombreCliente\" name=\"txtNombreCliente\" #nombreCliente=\"ngModel\" [(ngModel)]=\"clienteNuevo.nombre\" type=\"text\"\r\n                            class=\"form-control form-control-sm\" placeholder=\"Nombre\" />\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <input id=\"txtTelefonoCliente\" name=\"txtTelefonoCliente\" #telefonoCliente=\"ngModel\" [(ngModel)]=\"telefonoNuevo.telefono\"\r\n                            type=\"text\" minlength=\"8\" maxlength=\"8\" class=\"form-control form-control-sm\" placeholder=\"Teléfono\"/>\r\n                    </div>\r\n                </div>\r\n                \r\n            </div>\r\n        </div>        \r\n        <div class=\"card\">\r\n            <div class=\"card-header\">Dirección:</div>\r\n            <div class=\"card-body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-12\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtDirCli\">Dirección:</label>\r\n                            <input name=\"txtDirCli\" id=\"txtDirCli\" type=\"text\" class=\"form-control form-control-sm\" #direccionCliente=\"ngModel\" [(ngModel)]=\"direccionNueva.direccion\"\r\n                                placeholder=\"Dirección\" />\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"row\">\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtZonaCli\">Zona:</label>\r\n                            <input name=\"txtZonaCli\" id=\"txtZonaCli\" type=\"number\" class=\"form-control form-control-sm\" #zonaCliente=\"ngModel\" [(ngModel)]=\"direccionNueva.zona\"\r\n                                placeholder=\"Zona\" min=\"0\" />\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtColoniaCli\">Colonia:</label>\r\n                            <input name=\"txtColoniaCli\" id=\"txtColoniaCli\" type=\"text\" class=\"form-control form-control-sm\" #coloniaCliente=\"ngModel\"\r\n                                [(ngModel)]=\"direccionNueva.colonia\" placeholder=\"Colonia\" />\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtCodAccCli\">Código de acceso:</label>\r\n                            <input name=\"txtCodAccCli\" id=\"txtCodAccCli\" type=\"text\" class=\"form-control form-control-sm\" #codigoaccesoCliente=\"ngModel\"\r\n                                [(ngModel)]=\"direccionNueva.codigoacceso\" placeholder=\"Código de acceso\" />\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n                <div class=\"row\">\r\n                    <div class=\"col-6\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"selTipoDirCli\">Tipo de dirección:</label>\r\n                            <select name=\"selTipoDirCli\" id=\"selTipoDirCli\" class=\"form-control form-control-sm\" #tipoDireccionCliente=\"ngModel\"\r\n                                [(ngModel)]=\"direccionNueva.idtipodireccion\">\r\n                                <option *ngFor=\"let td of tiposDireccion\" [ngValue]=\"td._id\">{{td.descripcion}}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-6\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"selRestCli\">Atiende:</label>\r\n                            <select name=\"selRestCli\" id=\"selRestCli\" class=\"form-control form-control-sm\" #restauranteCliente=\"ngModel\" [(ngModel)]=\"direccionNueva.idrestaurante\">\r\n                                <option *ngFor=\"let rest of restaurantes\" [ngValue]=\"rest._id\">{{rest.nombre}}</option>\r\n                            </select>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"card\">\r\n            <div class=\"card-header\">Datos de facturación:</div>\r\n            <div class=\"card-body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtNit\">N.I.T.:</label>\r\n                            <input name=\"txtNit\" id=\"txtNit\" type=\"text\" class=\"form-control form-control-sm\" #nitCliente=\"ngModel\"\r\n                                [(ngModel)]=\"facturaNueva.nit\" placeholder=\"N.I.T.\"/>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtNomFact\">Nombre:</label>\r\n                            <input name=\"txtNomFact\" id=\"txtNomFact\" type=\"text\" class=\"form-control form-control-sm\" #nombreFacturaCliente=\"ngModel\"\r\n                                [(ngModel)]=\"facturaNueva.nombre\" placeholder=\"Nombre\"/>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-4\">\r\n                        <div class=\"form-group\">\r\n                            <label for=\"txtDirFact\">Dirección:</label>\r\n                            <input name=\"txtDirFact\" id=\"txtDirFact\" type=\"text\" class=\"form-control form-control-sm\" #direccionFacturaCliente=\"ngModel\"\r\n                                [(ngModel)]=\"facturaNueva.direccion\" placeholder=\"Dirección\"/>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n    <div class=\"modal-footer justify-content-end\">\r\n        <div class=\"btn-group-sm\">\r\n            <button type=\"button\" class=\"btn btn-sm btn-outline-warning\" (click)=\"d('')\">Cancelar</button>\r\n            <button type=\"button\" class=\"btn btn-sm btn-outline-success\" (click)=\"c('')\">Guardar y continuar...</button>\r\n        </div>\r\n    </div>\r\n</ng-template>\r\n<toaster-container [toasterconfig]=\"toasterconfig\"></toaster-container>"
 
 /***/ }),
 
@@ -2310,12 +2336,12 @@ var ListaComandasComponent = /** @class */ (function () {
         this.token = this._ls.get('restouchusr').token;
         this.idclienteSelected = null;
         this.listaComandas = [];
-        this.comandaSelected = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, null, null, [], [], [], null, null, null, null, [], null, false);
+        this.comandaSelected = new __WEBPACK_IMPORTED_MODULE_6__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, null, null, [], [], [], null, null, null, null, [], null, null, false);
         this.resumenCobro = [];
         this.contadores = [];
         this.filtroCliente = null;
-        this.fdel = __WEBPACK_IMPORTED_MODULE_19_moment__().format('YYYY-MM-DD');
-        // this.fdel = moment('01/01/2018').format('YYYY-MM-DD');
+        // this.fdel = moment().format('YYYY-MM-DD');
+        this.fdel = __WEBPACK_IMPORTED_MODULE_19_moment__('2018-04-26').format('YYYY-MM-DD');
         this.fal = __WEBPACK_IMPORTED_MODULE_19_moment__().format('YYYY-MM-DD');
         this.restaurantesUsuario = [];
         this.mintOrders = [];
@@ -2339,30 +2365,34 @@ var ListaComandasComponent = /** @class */ (function () {
         });
     };
     ListaComandasComponent.prototype.loadComandasEnhanced = function (idestatus) {
-        // this.mintOrders = this._mintService.listaPedidos(this.token, '0');
-        // console.log('Mint orders: ', this.mintOrders);
         var _this = this;
         if (idestatus === void 0) { idestatus = ''; }
-        if (this.restaurantesUsuario.length > 0) {
-            this.restaurantesUsuario = [];
-        }
-        this._ls.get('restouchusr').restaurante.forEach(function (rst) { _this.restaurantesUsuario.push(rst._id); });
-        var parametros = {
-            fdel: __WEBPACK_IMPORTED_MODULE_19_moment__(this.fdel).format('YYYY-MM-DD'),
-            fal: __WEBPACK_IMPORTED_MODULE_19_moment__(this.fal).format('YYYY-MM-DD'),
-            idestatuscomanda: idestatus,
-            restaurantes: this.restaurantesUsuario
-        };
-        // console.log(parametros);
-        this._comandaService.listaComandasPost(this.token, parametros).subscribe(function (result) {
-            if (result.lista) {
-                _this.listaComandas = result.lista;
-            }
-            else {
-                _this.listaComandas = [];
-            }
-        }, function (error) {
-            var respuesta = JSON.parse(error._body);
+        this._mintService.listaPedidos(this.token, __WEBPACK_IMPORTED_MODULE_19_moment__(this.fdel).format('YYYY-MM-DD'), __WEBPACK_IMPORTED_MODULE_19_moment__(this.fal).format('YYYY-MM-DD')).subscribe(function (resMint) {
+            _this._mintService.crearPedidos(resMint.lista, _this.token).then(function (res) {
+                if (_this.restaurantesUsuario.length > 0) {
+                    _this.restaurantesUsuario = [];
+                }
+                _this._ls.get('restouchusr').restaurante.forEach(function (rst) { _this.restaurantesUsuario.push(rst._id); });
+                var parametros = {
+                    fdel: __WEBPACK_IMPORTED_MODULE_19_moment__(_this.fdel).format('YYYY-MM-DD'),
+                    fal: __WEBPACK_IMPORTED_MODULE_19_moment__(_this.fal).format('YYYY-MM-DD'),
+                    idestatuscomanda: idestatus,
+                    restaurantes: _this.restaurantesUsuario
+                };
+                _this._comandaService.listaComandasPost(_this.token, parametros).subscribe(function (result) {
+                    if (result.lista) {
+                        _this.listaComandas = result.lista;
+                    }
+                    else {
+                        _this.listaComandas = [];
+                    }
+                }, function (error) {
+                    var respuesta = JSON.parse(error._body);
+                    _this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+                });
+            });
+        }, function (errMint) {
+            var respuesta = JSON.parse(errMint._body);
             _this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
         });
     };
@@ -2412,7 +2442,7 @@ var ListaComandasComponent = /** @class */ (function () {
         var _this = this;
         this.loadComandasEnhanced();
         // this.loadContadores();
-        this.repetidor = __WEBPACK_IMPORTED_MODULE_17_rxjs_Observable__["a" /* Observable */].interval(1000 * 10).subscribe(function (tick) {
+        this.repetidor = __WEBPACK_IMPORTED_MODULE_17_rxjs_Observable__["a" /* Observable */].interval(1000 * 15).subscribe(function (tick) {
             _this.loadComandasEnhanced();
             // this.loadContadores();
         });
@@ -2484,7 +2514,7 @@ var ListaComandasComponent = /** @class */ (function () {
     ListaComandasComponent.prototype.nuevoPedido = function (modalNuevoPedido) {
         var _this = this;
         this.modalService.open(modalNuevoPedido).result.then(function (result) {
-            console.log(result);
+            // console.log(result);
             _this.clienteNuevo = new __WEBPACK_IMPORTED_MODULE_2__models_cliente__["a" /* Cliente */](null, result, [], null, null, false, [], false);
             _this._clienteService.crear(_this.clienteNuevo, _this.token).subscribe(function (response) {
                 if (response.entidad) {
@@ -2659,7 +2689,8 @@ module.exports = "<div class=\"container-fluid justify-content-center\" style=\"
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_usuario__ = __webpack_require__("./src/app/models/usuario.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__services_usuario_service__ = __webpack_require__("./src/app/services/usuario.service.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__services_localstorage_service__ = __webpack_require__("./src/app/services/localstorage.service.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_angular2_toaster__ = __webpack_require__("./node_modules/angular2-toaster/angular2-toaster.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__services_mint_service__ = __webpack_require__("./src/app/services/mint.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angular2_toaster__ = __webpack_require__("./node_modules/angular2-toaster/angular2-toaster.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2675,13 +2706,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(_route, _router, _usuarioService, _ls, toasterService) {
+    function LoginComponent(_route, _router, _usuarioService, _ls, _mintService, toasterService) {
         this._route = _route;
         this._router = _router;
         this._usuarioService = _usuarioService;
         this._ls = _ls;
-        this.toasterconfig = new __WEBPACK_IMPORTED_MODULE_5_angular2_toaster__["a" /* ToasterConfig */]({ positionClass: 'toast-bottom-full-width' });
+        this._mintService = _mintService;
+        this.toasterconfig = new __WEBPACK_IMPORTED_MODULE_6_angular2_toaster__["a" /* ToasterConfig */]({ positionClass: 'toast-bottom-full-width' });
         this.usuario = new __WEBPACK_IMPORTED_MODULE_2__models_usuario__["a" /* Usuario */](null, null, null, null, null, [], [], false);
         this.toasterService = toasterService;
     }
@@ -2695,7 +2728,14 @@ var LoginComponent = /** @class */ (function () {
                 response.entidad.token = response.token;
                 _this._ls.set('restouchusr', response.entidad);
                 _this.toasterService.pop('success', 'Login', response.mensaje);
-                _this._router.navigate(['/comandas']);
+                _this._mintService.getMintToken().subscribe(function (respMint) {
+                    _this._ls.set('m1nt', respMint.entidad);
+                }, function (errMint) {
+                    var respuesta = JSON.parse(errMint._body);
+                    _this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+                }, function () {
+                    _this._router.navigate(['/comandas']);
+                });
             }
             else {
                 _this._ls.clearAll();
@@ -2711,13 +2751,14 @@ var LoginComponent = /** @class */ (function () {
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-log-in',
             template: __webpack_require__("./src/app/components/login/login.component.html"),
-            providers: [__WEBPACK_IMPORTED_MODULE_3__services_usuario_service__["a" /* UsuarioService */], __WEBPACK_IMPORTED_MODULE_4__services_localstorage_service__["a" /* LocalStorageService */]]
+            providers: [__WEBPACK_IMPORTED_MODULE_3__services_usuario_service__["a" /* UsuarioService */], __WEBPACK_IMPORTED_MODULE_4__services_localstorage_service__["a" /* LocalStorageService */], __WEBPACK_IMPORTED_MODULE_5__services_mint_service__["a" /* MintService */]]
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_router__["a" /* ActivatedRoute */],
             __WEBPACK_IMPORTED_MODULE_1__angular_router__["b" /* Router */],
             __WEBPACK_IMPORTED_MODULE_3__services_usuario_service__["a" /* UsuarioService */],
             __WEBPACK_IMPORTED_MODULE_4__services_localstorage_service__["a" /* LocalStorageService */],
-            __WEBPACK_IMPORTED_MODULE_5_angular2_toaster__["c" /* ToasterService */]])
+            __WEBPACK_IMPORTED_MODULE_5__services_mint_service__["a" /* MintService */],
+            __WEBPACK_IMPORTED_MODULE_6_angular2_toaster__["c" /* ToasterService */]])
     ], LoginComponent);
     return LoginComponent;
 }());
@@ -4487,7 +4528,7 @@ var Cliente = /** @class */ (function () {
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Comanda; });
 var Comanda = /** @class */ (function () {
-    function Comanda(_id, idcliente, idtelefonocliente, iddireccioncliente, iddatosfacturacliente, fecha, idtipocomanda, idusuario, fechainitoma, fechafintoma, idestatuscomanda, notas, cantidaditems, totalcomanda, detallecomanda, detcobrocomanda, detfacturara, idtiempoentrega, idrestaurante, idmotorista, imgpago, bitacoraestatus, tracking, debaja) {
+    function Comanda(_id, idcliente, idtelefonocliente, iddireccioncliente, iddatosfacturacliente, fecha, idtipocomanda, idusuario, fechainitoma, fechafintoma, idestatuscomanda, notas, cantidaditems, totalcomanda, detallecomanda, detcobrocomanda, detfacturara, idtiempoentrega, idrestaurante, idmotorista, imgpago, bitacoraestatus, tracking, noorden, debaja) {
         this._id = _id;
         this.idcliente = idcliente;
         this.idtelefonocliente = idtelefonocliente;
@@ -4511,6 +4552,7 @@ var Comanda = /** @class */ (function () {
         this.imgpago = imgpago;
         this.bitacoraestatus = bitacoraestatus;
         this.tracking = tracking;
+        this.noorden = noorden;
         this.debaja = debaja;
     }
     return Comanda;
@@ -5218,6 +5260,39 @@ var ClienteService = /** @class */ (function () {
         });
         return this._http.post(this.url + 'c', params, { headers: headers }).map(function (res) { return res.json(); });
     };
+    ClienteService.prototype.crearAsync = function (clienteNuevo, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var params, headers, response, res, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        params = JSON.stringify(clienteNuevo);
+                        headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({
+                            'Content-Type': 'application/json',
+                            'Authorization': token
+                        });
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 5]);
+                        return [4 /*yield*/, this._http.post(this.url + 'c', params, { headers: headers }).toPromise()];
+                    case 2:
+                        response = _a.sent();
+                        res = response.json();
+                        if (!res.entidad) {
+                            return [2 /*return*/, null];
+                        }
+                        return [2 /*return*/, res.entidad];
+                    case 3:
+                        error_1 = _a.sent();
+                        return [4 /*yield*/, console.log('ERROR: ', error_1)];
+                    case 4:
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
     ClienteService.prototype.crearPaqueteCliente = function (cliente, telefono, direccion, factura, token) {
         var params = {
             cliente: cliente,
@@ -5233,7 +5308,7 @@ var ClienteService = /** @class */ (function () {
     };
     ClienteService.prototype.crearPaqueteClienteAsync = function (cliente, telefono, direccion, factura, token) {
         return __awaiter(this, void 0, void 0, function () {
-            var params, headers, response, res, error_1;
+            var params, headers, response, res, error_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5259,8 +5334,8 @@ var ClienteService = /** @class */ (function () {
                         }
                         return [2 /*return*/, res.entidad];
                     case 3:
-                        error_1 = _a.sent();
-                        return [4 /*yield*/, console.log('ERROR: ', error_1)];
+                        error_2 = _a.sent();
+                        return [4 /*yield*/, console.log('ERROR: ', error_2)];
                     case 4:
                         _a.sent();
                         return [3 /*break*/, 5];
@@ -5301,7 +5376,7 @@ var ClienteService = /** @class */ (function () {
     };
     ClienteService.prototype.getCliByTelAsync = function (telcliente, token) {
         return __awaiter(this, void 0, void 0, function () {
-            var headers, response, res, error_2;
+            var headers, response, res, error_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5321,8 +5396,8 @@ var ClienteService = /** @class */ (function () {
                         }
                         return [2 /*return*/, res.lista[0]];
                     case 3:
-                        error_2 = _a.sent();
-                        return [4 /*yield*/, console.log('ERROR: ', error_2)];
+                        error_3 = _a.sent();
+                        return [4 /*yield*/, console.log('ERROR: ', error_3)];
                     case 4:
                         _a.sent();
                         return [3 /*break*/, 5];
@@ -5356,7 +5431,7 @@ var ClienteService = /** @class */ (function () {
     };
     ClienteService.prototype.getTelefonoClienteNumtelAsync = function (idcliente, telefono, token) {
         return __awaiter(this, void 0, void 0, function () {
-            var headers, response, res, error_3;
+            var headers, response, res, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -5376,8 +5451,8 @@ var ClienteService = /** @class */ (function () {
                         }
                         return [2 /*return*/, res.entidad];
                     case 3:
-                        error_3 = _a.sent();
-                        return [4 /*yield*/, console.log('ERROR: ', error_3)];
+                        error_4 = _a.sent();
+                        return [4 /*yield*/, console.log('ERROR: ', error_4)];
                     case 4:
                         _a.sent();
                         return [3 /*break*/, 5];
@@ -6325,8 +6400,8 @@ var GoogleApiService = /** @class */ (function () {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return GLOBAL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EstatusComanda; });
 var GLOBAL = {
-    // url: 'http://' + window.location.hostname + ':3789/api/' // Descomentar para servidor de produccion
-    url: 'http://' + window.location.hostname + ':4200/api/' // Descomentar para servidor de produccion
+    url: 'http://' + window.location.hostname + ':3789/api/'
+    // url: 'http://' + window.location.hostname + ':4200/api/'
 };
 var EstatusComanda;
 (function (EstatusComanda) {
@@ -6369,9 +6444,6 @@ var JsReportService = /** @class */ (function () {
     function JsReportService(_http, _sanitizer) {
         this._http = _http;
         this._sanitizer = _sanitizer;
-        // this.url = 'http://localhost:5489/api/report'; //pruebas locales
-        // this.url = 'http://138.68.248.143:5489/api/report'; // servidor de pruebas
-        // this.url = 'http://104.236.58.180:5489/api/report'; // servidor de produccion
         this.url = 'http://' + window.location.hostname + ':5489/api/report'; // servidor de produccion
     }
     JsReportService.prototype.getPDFReport = function (shortid, obj) {
@@ -6669,11 +6741,8 @@ var MenuRestComponenteService = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__models_detallecomanda__ = __webpack_require__("./src/app/models/detallecomanda.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__models_bitacoraestatus__ = __webpack_require__("./src/app/models/bitacoraestatus.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__models_cliente__ = __webpack_require__("./src/app/models/cliente.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__models_telefonocliente__ = __webpack_require__("./src/app/models/telefonocliente.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__models_direccioncliente__ = __webpack_require__("./src/app/models/direccioncliente.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__models_datosfactcliente__ = __webpack_require__("./src/app/models/datosfactcliente.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_moment__ = __webpack_require__("./node_modules/moment/moment.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_15_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_moment__ = __webpack_require__("./node_modules/moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_12_moment__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -6731,9 +6800,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 
 
 
-
-
-
 var MintService = /** @class */ (function () {
     function MintService(_http, _comandaService, _dictFoxService, _clienteService, _ls) {
         this._http = _http;
@@ -6741,101 +6807,99 @@ var MintService = /** @class */ (function () {
         this._dictFoxService = _dictFoxService;
         this._clienteService = _clienteService;
         this._ls = _ls;
-        this.url = __WEBPACK_IMPORTED_MODULE_3__global__["b" /* GLOBAL */].url + 'rest/';
-        this.datosEjemplo = this.getTestData();
-        this.uid = this._ls.get('restouchusr')._id;
+        this.url = __WEBPACK_IMPORTED_MODULE_3__global__["b" /* GLOBAL */].url + 'mint/';
+        // this.datosEjemplo = this.getTestData();
+        var rtu = this._ls.get('restouchusr');
+        this.uid = rtu ? rtu._id : '';
+        this.token = rtu ? rtu.token : '';
     }
     MintService.prototype.getTestData = function () {
         return "[\n{\n      \"cliente\":{\n         \"apellidos\":\"Ejemplo\",\n         \"correoElectronico\":\"ejemplo@ejemplo.com\",\n         \"idCliente\":123,\n         \"nit\":\"C/F\",\n         \"nombres\":\"Ejemplo\",\n         \"razonSocial\":\"Ejemplo S.A.\",\n         \"telefono\":\"12340000\"\n      },\n      \"codigoAuorizacionCashless\":79147,\n      \"detalle\":[\n         {\n            \"cantidad\":1,\n            \"descripcion\":\"Producto 1\",\n            \"idOrdenDetalle\":76485,\n            \"idProducto\":200,\n            \"precio\":25.00,\n            \"total\":25.00\n         },\n         {\n            \"cantidad\":1,\n            \"descripcion\":\"Producto 2\",\n            \"idOrdenDetalle\":76486,\n            \"idProducto\":230,\n            \"precio\":25.00,\n            \"total\":25.00\n         }\n      ],\n      \"fecha\":\"2018-01-26T15:24:40.17\",\n      \"idComercio\":24,\n      \"idOrden\":58365,\n      \"idTransaccionCashless\":185835,\n      \"idUsuario\":\"3052ff59-9cc0-4afa-a4d5-72a4e851d944\",\n      \"nombreComercio\":\"Comercio Ejemplo\",\n      \"total\":50.00\n   },\n   {\n      \"cliente\":{\n         \"apellidos\":\"Test\",\n         \"correoElectronico\":\"Testtestest@gmail.com\",\n         \"idCliente\":3948,\n         \"nit\":\"C/F\",\n         \"nombres\":\"Test\",\n         \"razonSocial\":\"Test Test\",\n         \"telefono\":\"12340000\"\n      },\n      \"codigoAuorizacionCashless\":98020,\n      \"detalle\":[\n         {\n            \"cantidad\":1,\n            \"descripcion\":\"Producto Especial 3\",\n            \"idOrdenDetalle\":76484,\n            \"idProducto\":1034,\n            \"precio\":20.00,\n            \"total\":20.00\n         }\n      ],\n      \"fecha\":\"2018-01-26T15:23:42.497\",\n      \"idComercio\":20,\n      \"idOrden\":58364,\n      \"idTransaccionCashless\":185828,\n      \"idUsuario\":\"45074c9a-49cf-4ab7-a80c-65fe166a21db\",\n      \"nombreComercio\":\"Comercio Test\",\n      \"total\":20.00\n   },\n   {\n      \"cliente\":{\n         \"apellidos\":\"Arag\u00F3n S\u00E1nchez\",\n         \"correoElectronico\":\"jaragon@spcdatapro.com\",\n         \"idCliente\":3949,\n         \"nit\":\"4829032-7\",\n         \"nombres\":\"Javier Antonio\",\n         \"razonSocial\":\"Javier Arag\u00F3n\",\n         \"telefono\":\"30223231\"\n      },\n      \"codigoAuorizacionCashless\":98020,\n      \"detalle\":[\n         {\n            \"cantidad\":3,\n            \"descripcion\":\"Quesoburguesa doble\",\n            \"idOrdenDetalle\":76484,\n            \"idProducto\":200,\n            \"precio\":20.00,\n            \"total\":60.00\n         }\n      ],\n      \"fecha\":\"2018-04-26T09:32:42.497\",\n      \"idComercio\":20,\n      \"idOrden\":58366,\n      \"idTransaccionCashless\":185830,\n      \"idUsuario\":\"45074c9a-49cf-4ab7-a80c-65fe166a21db\",\n      \"nombreComercio\":\"Jake's Burguer\",\n      \"total\":60.00\n   }\n]";
     };
     MintService.prototype.nuevaComanda = function (token, pedido) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            var comanda, cliente, tmp, telefono;
+            var comanda, i, det, producto, cliente;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        comanda = new __WEBPACK_IMPORTED_MODULE_8__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, null, null, [], [], [], null, null, null, [], [], null, false);
+                        comanda = new __WEBPACK_IMPORTED_MODULE_8__models_comanda__["a" /* Comanda */](null, null, null, null, null, null, null, null, null, null, null, null, null, null, [], [], [], null, null, null, [], [], null, null, false);
                         comanda.tracking = pedido.idOrden;
-                        comanda.fecha = __WEBPACK_IMPORTED_MODULE_15_moment__(pedido.fecha).toDate();
+                        comanda.fecha = __WEBPACK_IMPORTED_MODULE_12_moment__(pedido.fecha).toDate();
                         comanda.idrestaurante = '5ad6721a0d8e6921dc3bd97a';
                         comanda.totalcomanda = pedido.total;
                         comanda.cantidaditems = pedido.detalle.length;
                         comanda.idestatuscomanda = '59fea7524218672b285ab0e3';
-                        comanda.fechainitoma = __WEBPACK_IMPORTED_MODULE_15_moment__(pedido.fecha).toDate();
-                        comanda.fechafintoma = __WEBPACK_IMPORTED_MODULE_15_moment__(pedido.fecha).toDate();
+                        comanda.fechainitoma = __WEBPACK_IMPORTED_MODULE_12_moment__(pedido.fecha).toDate();
+                        comanda.fechafintoma = __WEBPACK_IMPORTED_MODULE_12_moment__(pedido.fecha).toDate();
                         comanda.idusuario = this.uid;
                         comanda.idtipocomanda = '5a67816637dfc108b9248851';
-                        comanda.bitacoraestatus.push(new __WEBPACK_IMPORTED_MODULE_10__models_bitacoraestatus__["a" /* BitacoraEstatus */]('59fea7524218672b285ab0e3', 'Recibido en restaurante', __WEBPACK_IMPORTED_MODULE_15_moment__(pedido.fecha).toDate()));
+                        comanda.bitacoraestatus.push(new __WEBPACK_IMPORTED_MODULE_10__models_bitacoraestatus__["a" /* BitacoraEstatus */]('59fea7524218672b285ab0e3', 'Recibido en restaurante', __WEBPACK_IMPORTED_MODULE_12_moment__(pedido.fecha).toDate()));
                         comanda.debaja = false;
-                        pedido.detalle.forEach(function (det, i) { return __awaiter(_this, void 0, void 0, function () {
-                            var producto;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, this._dictFoxService.getProductoMint(+det.idProducto, '')];
-                                    case 1:
-                                        producto = _a.sent();
-                                        if (producto) {
-                                            comanda.detallecomanda.push(new __WEBPACK_IMPORTED_MODULE_9__models_detallecomanda__["a" /* DetalleComanda */](producto._id, +det.cantidad, producto.precio, null, producto.descripcionfull, null, null, producto.limitecomponentes, producto.tieneextras, producto.precioextra, false));
-                                        }
-                                        return [2 /*return*/];
-                                }
-                            });
-                        }); });
-                        return [4 /*yield*/, this._clienteService.getCliByTelAsync(pedido.cliente.telefono, '')];
+                        i = 0;
+                        _a.label = 1;
                     case 1:
-                        cliente = _a.sent();
-                        if (!!cliente) return [3 /*break*/, 4];
-                        return [4 /*yield*/, this._clienteService.crearPaqueteClienteAsync(new __WEBPACK_IMPORTED_MODULE_11__models_cliente__["a" /* Cliente */](null, (pedido.cliente.nombres + ' ' + pedido.cliente.apellidos), null, null, pedido.cliente.correoElectronico, false, null, false), new __WEBPACK_IMPORTED_MODULE_12__models_telefonocliente__["a" /* TelefonoCliente */](null, null, pedido.cliente.telefono, false), new __WEBPACK_IMPORTED_MODULE_13__models_direccioncliente__["a" /* DireccionCliente */](null, null, null, null, null, null, null, null, false), new __WEBPACK_IMPORTED_MODULE_14__models_datosfactcliente__["a" /* DatoFacturaCliente */](null, null, pedido.cliente.nit, pedido.cliente.razonSocial, null, false), '')];
+                        if (!(i < pedido.detalle.length)) return [3 /*break*/, 4];
+                        det = pedido.detalle[i];
+                        return [4 /*yield*/, this._dictFoxService.getProductoMint(+det.idProducto, '')];
                     case 2:
-                        tmp = _a.sent();
-                        return [4 /*yield*/, this._clienteService.getCliByTelAsync(tmp.telefono, '')];
+                        producto = _a.sent();
+                        // console.log('Producto del pedido ' + comanda.tracking + ': ', producto);
+                        if (producto) {
+                            comanda.detallecomanda.push(new __WEBPACK_IMPORTED_MODULE_9__models_detallecomanda__["a" /* DetalleComanda */](producto._id, +det.cantidad, producto.precio, null, producto.descripcionfull, null, null, producto.limitecomponentes, producto.tieneextras, producto.precioextra, false));
+                        }
+                        _a.label = 3;
                     case 3:
-                        cliente = _a.sent();
-                        _a.label = 4;
-                    case 4:
-                        comanda.idcliente = cliente._id;
-                        return [4 /*yield*/, this._clienteService.getTelefonoClienteNumtelAsync(cliente._id, pedido.cliente.telefono, '')];
+                        i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [4 /*yield*/, this._clienteService.crearAsync(new __WEBPACK_IMPORTED_MODULE_11__models_cliente__["a" /* Cliente */](null, (pedido.cliente.nombres + ' ' + pedido.cliente.apellidos), [], null, null, false, [], false), this.token)];
                     case 5:
-                        telefono = _a.sent();
-                        comanda.idtelefonocliente = telefono._id;
+                        cliente = _a.sent();
+                        comanda.idcliente = cliente._id;
+                        comanda.idtelefonocliente = null;
+                        if (!comanda.detallecomanda || comanda.detallecomanda.length === 0) {
+                            console.log('Sin detalle: ' + comanda.tracking, comanda);
+                        }
                         return [4 /*yield*/, this._comandaService.crearComandaAsync(comanda, token)];
                     case 6: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    MintService.prototype.listaPedidos = function (token, cuales) {
-        var _this = this;
-        if (cuales === void 0) { cuales = '0'; }
+    MintService.prototype.getMintToken = function () {
+        var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/json' });
+        return this._http.get(this.url + 'token', { headers: headers }).map(function (res) { return res.json(); });
+    };
+    MintService.prototype.listaPedidos = function (token, fdelstr, falstr) {
+        var params = JSON.stringify({ fdelstr: fdelstr, falstr: falstr });
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/json', 'Authorization': token });
-        var nuevas = [];
-        var pedidos;
-        // return this._http.get(this.url + 'lstrestaurantes/' + cuales, { headers: headers }).map(res => res.json());
-        pedidos = JSON.parse(this.datosEjemplo);
-        console.clear();
-        pedidos.forEach(function (pedido, i) { return __awaiter(_this, void 0, void 0, function () {
-            var comanda, nueva;
+        return this._http.post(this.url + 'ordenes', params, { headers: headers }).map(function (res) { return res.json(); });
+    };
+    MintService.prototype.crearPedidos = function (pedidos, token) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            var nuevas;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this._comandaService.getComandaByTrackingNo(+pedido.idOrden, token)];
-                    case 1:
-                        comanda = _a.sent();
-                        if (!!comanda) return [3 /*break*/, 3];
-                        return [4 /*yield*/, this.nuevaComanda(token, pedido)];
-                    case 2:
-                        nueva = _a.sent();
-                        nuevas.push(nueva.tracking.toString());
-                        return [3 /*break*/, 4];
-                    case 3:
-                        console.log('Ya existe el pedido No. ' + pedido.idOrden + '.');
-                        _a.label = 4;
-                    case 4: return [2 /*return*/];
-                }
+                nuevas = [];
+                pedidos.forEach(function (pedido, i) { return __awaiter(_this, void 0, void 0, function () {
+                    var comanda, nueva;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0: return [4 /*yield*/, this._comandaService.getComandaByTrackingNo(+pedido.idOrden, token)];
+                            case 1:
+                                comanda = _a.sent();
+                                if (!!comanda) return [3 /*break*/, 3];
+                                return [4 /*yield*/, this.nuevaComanda(token, pedido)];
+                            case 2:
+                                nueva = _a.sent();
+                                nuevas.push(nueva.tracking.toString());
+                                return [3 /*break*/, 3];
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); });
+                return [2 /*return*/];
             });
-        }); });
-        console.log('Agregadas: ', nuevas);
-        return [];
+        });
     };
     MintService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),

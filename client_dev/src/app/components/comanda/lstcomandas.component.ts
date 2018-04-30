@@ -80,13 +80,13 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
         this.listaComandas = [];
         this.comandaSelected = new Comanda(
             null, null, null, null, null, null, null, null, null, null, null, null,
-            null, null, [], [], [], null, null, null, null, [], null, false
+            null, null, [], [], [], null, null, null, null, [], null, null, false
         );
         this.resumenCobro = [];
         this.contadores = [];
         this.filtroCliente = null;
-        this.fdel = moment().format('YYYY-MM-DD');
-        // this.fdel = moment('01/01/2018').format('YYYY-MM-DD');
+        // this.fdel = moment().format('YYYY-MM-DD');
+        this.fdel = moment('2018-04-26').format('YYYY-MM-DD');
         this.fal = moment().format('YYYY-MM-DD');
         this.restaurantesUsuario = [];
         this.mintOrders = [];
@@ -114,32 +114,40 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
     }
 
     public loadComandasEnhanced(idestatus: string = '') {
-        // this.mintOrders = this._mintService.listaPedidos(this.token, '0');
-        // console.log('Mint orders: ', this.mintOrders);
+        this._mintService.listaPedidos(
+            this.token, moment(this.fdel).format('YYYY-MM-DD'), moment(this.fal).format('YYYY-MM-DD')
+        ).subscribe(
+            resMint => {
+                this._mintService.crearPedidos(resMint.lista, this.token).then((res) => {
+                    if (this.restaurantesUsuario.length > 0) { this.restaurantesUsuario = []; }
+                    this._ls.get('restouchusr').restaurante.forEach((rst) => { this.restaurantesUsuario.push(rst._id); });
+                    const parametros = {
+                        fdel: moment(this.fdel).format('YYYY-MM-DD'),
+                        fal: moment(this.fal).format('YYYY-MM-DD'),
+                        idestatuscomanda: idestatus,
+                        restaurantes: this.restaurantesUsuario
+                    };
 
-        if (this.restaurantesUsuario.length > 0) { this.restaurantesUsuario = []; }
-        this._ls.get('restouchusr').restaurante.forEach((rst) => { this.restaurantesUsuario.push(rst._id); });
-        const parametros = {
-            fdel: moment(this.fdel).format('YYYY-MM-DD'),
-            fal:  moment(this.fal).format('YYYY-MM-DD'),
-            idestatuscomanda: idestatus,
-            restaurantes : this.restaurantesUsuario
-        };
-        // console.log(parametros);
-        this._comandaService.listaComandasPost(this.token, parametros).subscribe(
-            result => {
-                if (result.lista) {
-                    this.listaComandas = result.lista;
-                } else {
-                    this.listaComandas = [];
-                }
+                    this._comandaService.listaComandasPost(this.token, parametros).subscribe(
+                        result => {
+                            if (result.lista) {
+                                this.listaComandas = result.lista;
+                            } else {
+                                this.listaComandas = [];
+                            }
+                        },
+                        error => {
+                            const respuesta = JSON.parse(error._body);
+                            this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+                        }
+                    );
+                });
             },
-            error => {
-                const respuesta = JSON.parse(error._body);
+            errMint => {
+                const respuesta = JSON.parse(errMint._body);
                 this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
             }
         );
-
     }
 
     public loadContadores() {
@@ -196,7 +204,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.loadComandasEnhanced();
         // this.loadContadores();
-        this.repetidor = Observable.interval(1000 * 10).subscribe(tick => {
+        this.repetidor = Observable.interval(1000 * 15).subscribe(tick => {
             this.loadComandasEnhanced();
             // this.loadContadores();
         });
@@ -287,7 +295,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
     nuevoPedido(modalNuevoPedido) {
         this.modalService.open(modalNuevoPedido).result.then(
             result => {
-                console.log(result);
+                // console.log(result);
                 this.clienteNuevo = new Cliente(null, result, [], null, null, false, [], false);
                 this._clienteService.crear(this.clienteNuevo, this.token).subscribe(
                     response => {

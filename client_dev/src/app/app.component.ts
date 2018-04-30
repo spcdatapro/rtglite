@@ -105,6 +105,7 @@ export class AppComponent implements OnInit, DoCheck {
   logOut() {
     this._ls.clear('restouchusr');
     this._ls.clear('gcode');
+    this._ls.clear('m1nt');
     this.goToUrl({url: ''});
   }
 
