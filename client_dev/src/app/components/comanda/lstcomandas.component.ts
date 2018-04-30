@@ -85,8 +85,8 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
         this.resumenCobro = [];
         this.contadores = [];
         this.filtroCliente = null;
-        // this.fdel = moment().format('YYYY-MM-DD');
-        this.fdel = moment('2018-04-26').format('YYYY-MM-DD');
+        this.fdel = moment().format('YYYY-MM-DD');
+        // this.fdel = moment('2018-04-26').format('YYYY-MM-DD');
         this.fal = moment().format('YYYY-MM-DD');
         this.restaurantesUsuario = [];
         this.mintOrders = [];
@@ -204,7 +204,7 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.loadComandasEnhanced();
         // this.loadContadores();
-        this.repetidor = Observable.interval(1000 * 15).subscribe(tick => {
+        this.repetidor = Observable.interval(1000 * 10).subscribe(tick => {
             this.loadComandasEnhanced();
             // this.loadContadores();
         });

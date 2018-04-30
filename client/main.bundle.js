@@ -2340,8 +2340,8 @@ var ListaComandasComponent = /** @class */ (function () {
         this.resumenCobro = [];
         this.contadores = [];
         this.filtroCliente = null;
-        // this.fdel = moment().format('YYYY-MM-DD');
-        this.fdel = __WEBPACK_IMPORTED_MODULE_19_moment__('2018-04-26').format('YYYY-MM-DD');
+        this.fdel = __WEBPACK_IMPORTED_MODULE_19_moment__().format('YYYY-MM-DD');
+        // this.fdel = moment('2018-04-26').format('YYYY-MM-DD');
         this.fal = __WEBPACK_IMPORTED_MODULE_19_moment__().format('YYYY-MM-DD');
         this.restaurantesUsuario = [];
         this.mintOrders = [];
@@ -2442,7 +2442,7 @@ var ListaComandasComponent = /** @class */ (function () {
         var _this = this;
         this.loadComandasEnhanced();
         // this.loadContadores();
-        this.repetidor = __WEBPACK_IMPORTED_MODULE_17_rxjs_Observable__["a" /* Observable */].interval(1000 * 15).subscribe(function (tick) {
+        this.repetidor = __WEBPACK_IMPORTED_MODULE_17_rxjs_Observable__["a" /* Observable */].interval(1000 * 10).subscribe(function (tick) {
             _this.loadComandasEnhanced();
             // this.loadContadores();
         });
