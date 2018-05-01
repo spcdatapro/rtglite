@@ -185,9 +185,9 @@
                                         <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" *ngIf="dc.tieneextras" (click)="pideExtrasProducto(modalExtrasProducto, i)">Extras</button>
                                         <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" (click)="pideNotasProducto(modalNotasProducto, i)">Notas</button>
                                         <button type="button" class="btn btn-sm btn-outline-primary" style="font-size: 8pt" (click)="editaComponentes(dc, i, modalEditaComponentes)">
-                                            <span class="oi oi-pencil" title="Editar" aria-hidden="true"></span>
+                                            Ingred.
                                         </button>
-                                        <button type="button" class="btn btn-sm btn-danger" style="font-size: 8pt" (click)="removeItemPedido(i)">
+                                        <button type="button" class="btn btn-sm btn-danger" style="font-size: 8pt" (click)="removeItemPedido(i)" *ngIf="false">
                                             <span class="oi oi-trash" title="Eliminar" aria-hidden="true"></span>
                                         </button>
                                     </div>                                   

@@ -6,10 +6,18 @@ var axios = require('axios');
 var qs = require('qs');
 
 var Mint = require('../models/mint');
+/*
+//Datos de servidor de pruebas
 var urlMintToken = "http://coltranecashlessapi-stg.azurewebsites.net/token";
 var urlMintApi = "http://coltranecashlessapi-stg.azurewebsites.net/api/orden?";
 var mintClientId = "spctest", mintClientSecret = "TffRsTvD4QxdsTy6WoUTh+86X46Zl3McKh78tMtP3aY=";
 var mintUsr = "adminchicha1", mintPwd = "adminchicha1";
+*/
+
+var urlMintToken = "http://api.pos.verynicetech.com/token";
+var urlMintApi = "http://api.pos.verynicetech.com/api/orden?";
+var mintClientId = "adminjake", mintClientSecret = "jks2809";
+var mintUsr = "adminjake", mintPwd = "jks2809";
 
 async function updateMintToken(mintData = null) {
     if(!mintData){
