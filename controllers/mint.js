@@ -16,7 +16,7 @@ var mintUsr = "adminchicha1", mintPwd = "adminchicha1";
 
 var urlMintToken = "http://api.pos.verynicetech.com/token";
 var urlMintApi = "http://api.pos.verynicetech.com/api/orden?";
-var mintClientId = "adminjake", mintClientSecret = "jks2809";
+var mintClientId = "webApp", mintClientSecret = "jks2809";
 var mintUsr = "adminjake", mintPwd = "jks2809";
 
 async function updateMintToken(mintData = null) {
@@ -59,8 +59,7 @@ function getMintToken(req, res) {
                     grant_type: 'password',
                     username: mintUsr,
                     password: mintPwd,
-                    client_id: mintClientId,
-                    client_secret: mintClientSecret
+                    client_id: mintClientId
                 }
                 request({
                     url: urlMintToken,

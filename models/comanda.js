@@ -18,7 +18,7 @@ var ComandaSchema = Schema({
     cantidaditems: Number,
     totalcomanda: Number,
     tracking: { type: Number, unique: true, dropDups: true },
-    noorden: { type: Number, unique: true, dropDups: true },
+    noorden: { type: Number },
     detallecomanda: Array,
     detcobrocomanda: Array,
     detfacturara: Array,
