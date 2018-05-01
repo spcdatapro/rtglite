@@ -205,11 +205,11 @@
                 <div class="card-footer text-right" style="padding: 0 !important;">
                     <div class="btn-group btn-group-sm text-right">
                         <button type="button" class="btn btn-warning btn-sm" (click)="cancelaPedido()" *ngIf="!eshistorica">Cancelar</button>
-                        <button type="button" class="btn btn-success btn-sm" *ngIf="comanda.totalcomanda > 0 && !eshistorica" (click)="terminarPedido(modalPagar, modalConfirmEnd)" 
+                        <button type="button" class="btn btn-success btn-sm" *ngIf="false" (click)="terminarPedido(modalPagar, modalConfirmEnd)" 
                             [disabled]="!comanda.idtipocomanda || !comanda.idrestaurante || !comanda.idtiempoentrega">
                             Terminar
                         </button>
-                        <button type="button" class="btn btn-success btn-sm" *ngIf="comanda.totalcomanda > 0 && eshistorica" (click)="guardarHistorica()" 
+                        <button type="button" class="btn btn-success btn-sm" *ngIf="false" (click)="guardarHistorica()" 
                             [disabled]="!comanda.idtipocomanda || !comanda.idrestaurante || !comanda.idtiempoentrega || !comanda.fecha">
                             Guardar histórica
                         </button>
