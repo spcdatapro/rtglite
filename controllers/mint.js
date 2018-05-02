@@ -34,11 +34,17 @@ async function updateMintToken(mintData = null) {
         return mintData;
     } else {
         console.log('Refrescando M1NT token...');
-        var data = {
+        /*var data = {
             grant_type: 'refresh_token',
             refresh_token: mintData.refresh_token,
             client_id: mintClientId
-        };        
+        };*/      
+        var data = {
+            grant_type: 'password',
+            username: mintUsr,
+            password: mintPwd,
+            client_id: mintClientId
+        }
         var newMintData = await axios.post(urlMintToken, qs.stringify(data)).then(function(response){ return response.data; }).catch(function(err) { return null; });
         if (newMintData) {
             return Mint.findByIdAndUpdate(mintData._id, newMintData, { new: true }).exec().then((mintUpd) => { return mintUpd; });
