@@ -47,7 +47,17 @@ async function updateMintToken(mintData = null) {
         }
         var newMintData = await axios.post(urlMintToken, qs.stringify(data)).then(function(response){ return response.data; }).catch(function(err) { return null; });
         if (newMintData) {
-            return Mint.findByIdAndUpdate(mintData._id, newMintData, { new: true }).exec().then((mintUpd) => { return mintUpd; });
+            var mint = new Mint(), cuerpo = JSON.parse(newMintData);
+            mint.access_token = cuerpo.access_token;
+            mint.token_type = cuerpo.token_type;
+            mint.expires_in = cuerpo.expires_in;
+            mint.refresh_token = cuerpo.refresh_token;
+            mint['as:client_id'] = cuerpo['as:client_id'];
+            mint.userName = cuerpo.userName;
+            mint.issued = cuerpo['.issued'];
+            mint.expires = cuerpo['.expires'];
+            //return Mint.findByIdAndUpdate(mintData._id, newMintData, { new: true }).exec().then((mintUpd) => { return mintUpd; });
+            return Mint.findByIdAndUpdate(mintData._id, mint, { new: true }).exec().then((mintUpd) => { return mintUpd; });
         } else {
             return null;
         }        
