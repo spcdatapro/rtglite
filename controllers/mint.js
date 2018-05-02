@@ -47,7 +47,7 @@ async function updateMintToken(mintData = null) {
         }
         var newMintData = await axios.post(urlMintToken, qs.stringify(data)).then(function(response){ return response.data; }).catch(function(err) { return null; });
         if (newMintData) {
-            var mint = new Mint(), cuerpo = newMintData;
+            var mint = {}, cuerpo = newMintData;
             mint.access_token = cuerpo.access_token;
             mint.token_type = cuerpo.token_type;
             mint.expires_in = cuerpo.expires_in;
