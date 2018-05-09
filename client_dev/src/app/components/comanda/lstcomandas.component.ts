@@ -144,8 +144,11 @@ export class ListaComandasComponent implements OnInit, OnDestroy {
                 });
             },
             errMint => {
-                const respuesta = JSON.parse(errMint._body);
-                this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+                try {
+                    const respuesta = JSON.parse(errMint._body);
+                    this.toasterService.pop('error', 'Error', 'Error: ' + respuesta.mensaje);
+                }catch (e) {
+                }
             }
         );
     }

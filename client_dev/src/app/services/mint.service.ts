@@ -7,6 +7,7 @@ import { ComandaService } from './comanda.service';
 import { DiccionarioFoxService } from './diccionariofox.service';
 import { ClienteService } from './cliente.service';
 import { LocalStorageService } from './localstorage.service';
+import { GoogleApiService } from './gapi.service';
 
 import { Comanda } from '../models/comanda';
 import { DetalleComanda } from '../models/detallecomanda';
@@ -126,7 +127,7 @@ export class MintService {
 
     constructor(
         private _http: Http, private _comandaService: ComandaService, private _dictFoxService: DiccionarioFoxService,
-        private _clienteService: ClienteService, private _ls: LocalStorageService
+        private _clienteService: ClienteService, private _ls: LocalStorageService, private _gapiService: GoogleApiService
     ) {
         this.url = GLOBAL.url + 'mint/';
         // this.datosEjemplo = this.getTestData();
@@ -143,7 +144,7 @@ export class MintService {
 
         comanda.tracking = pedido.idOrden;
         comanda.fecha = moment(pedido.fecha).toDate();
-        comanda.idrestaurante = '5ad6721a0d8e6921dc3bd97a';
+        comanda.idrestaurante = '5af33442122a512fdcd07a27';
         comanda.totalcomanda = pedido.total;
         comanda.cantidaditems = pedido.detalle.length;
         comanda.idestatuscomanda = '59fea7524218672b285ab0e3';
@@ -195,12 +196,33 @@ export class MintService {
         return this._http.post(this.url + 'ordenes', params, { headers: headers }).map(res => res.json());
     }
 
+    private async printPedido(trackingNo: number, token: string) {
+        this._gapiService.updGoogleToken().subscribe(
+            respUpd => {
+                this._gapiService.print(trackingNo, this.token).subscribe(
+                    respPrint => {
+                        console.log('Imprimiento orden No. ' + trackingNo);
+                    },
+                    errorPrint => {
+                        const respuesta = JSON.parse(errorPrint._body);
+                        console.log('Error: ' + respuesta.mensaje);
+                    }
+                );
+            },
+            errUpd => {
+                const respuesta = JSON.parse(errUpd._body);
+                console.log('Error: ' + respuesta.mensaje);
+            }
+        );
+    }
+
     async crearPedidos(pedidos: Array<any>, token: string) {
         const nuevas: Array<string> = [];
         pedidos.forEach(async (pedido, i) => {
             const comanda = await this._comandaService.getComandaByTrackingNo(+pedido.idOrden, token);
             if (!comanda) {
                 const nueva = await this.nuevaComanda(token, pedido);
+                await this.printPedido(nueva.tracking, token);
                 nuevas.push(nueva.tracking.toString());
             } else {
                 // console.log('Ya existe el pedido No. ' + pedido.idOrden + '.');
