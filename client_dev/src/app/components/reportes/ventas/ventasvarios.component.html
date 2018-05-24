@@ -16,7 +16,7 @@
                             <input name="txtFAl" id="txtFAl" type="date" class="form-control form-control-sm" #fAl="ngModel" [(ngModel)]="params.fal" placeholder="Al" required/>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <!--<div class="col-4">
                         <div class="form-group">
                             <label for="selReporte">Por:</label>
                             <select name="selReporte" id="selReporte" class="form-control form-control-sm" #tipoReporte="ngModel"
@@ -27,6 +27,7 @@
                             </select>
                         </div>
                     </div>
+                    -->
                 </div>
                 <div class="btn-group btn-group-sm justify-content-end">
                     <button type="button" class="btn btn-primary btn-sm" [disabled]="!frmParams.form.valid" (click)="getReporte()">

@@ -144,7 +144,7 @@ export class MintService {
 
         comanda.tracking = pedido.idOrden;
         comanda.fecha = moment(pedido.fecha).toDate();
-        comanda.idrestaurante = '5af33442122a512fdcd07a27';
+        comanda.idrestaurante = '5ad6721a0d8e6921dc3bd97a';
         comanda.totalcomanda = pedido.total;
         comanda.cantidaditems = pedido.detalle.length;
         comanda.idestatuscomanda = '59fea7524218672b285ab0e3';
@@ -222,7 +222,7 @@ export class MintService {
             const comanda = await this._comandaService.getComandaByTrackingNo(+pedido.idOrden, token);
             if (!comanda) {
                 const nueva = await this.nuevaComanda(token, pedido);
-                await this.printPedido(nueva.tracking, token);
+                // await this.printPedido(nueva.tracking, token);
                 nuevas.push(nueva.tracking.toString());
             } else {
                 // console.log('Ya existe el pedido No. ' + pedido.idOrden + '.');

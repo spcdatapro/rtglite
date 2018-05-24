@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var moment = require('moment');
+var productoComanda = require('../classes/productoComanda');
 
 // Modelos
 var Comanda = require('../models/comanda');
@@ -9,6 +10,8 @@ var Usuario = require('../models/usuario');
 var PresupuestoVentas = require('../models/presupuestoventas');
 var Restaurante = require('../models/restaurante');
 var TipoComanda = require('../models/tipocomanda');
+var Carta = require('../models/menurest');
+var rptVentas = require('../models/rptventas');
 
 async function ventasPorOperador(req, res) {
     var body = req.body;
@@ -248,6 +251,144 @@ async function ventasPorTipoComanda(req, res) {
 
 }
 
+async function getRutaProducto(idpadre, ruta){
+    var padre = {};
+    padre = await Carta.findById(idpadre, 'idpadre descripcion').exec();    
+    if(padre){
+        ruta.push(padre.descripcion);        
+        if(padre.idpadre){
+            getRutaProducto(padre.idpadre, ruta);
+        } else {            
+            return ruta.reverse().join(' - ');
+        }
+    } else {
+        return `No se encuentra el producto con id ${idpadre}.`;
+    }
+}
+
+async function ventas(req, res){
+    var body = req.body;
+    var fdel = moment(body.fdel).startOf('day').toDate();
+    var fal = moment(body.fal).endOf('day').toDate();
+
+    var aggOpts = [{
+            $match: {
+                fecha: {
+                    $gte: fdel,
+                    $lte: fal
+                }
+            }
+        },
+        {
+            $project: {                
+                _id: "$_id",
+                fecha: "$fecha",
+                idrestaurante: "$idrestaurante",
+                tracking: "$tracking",
+                idproducto: "$detallecomanda.idmenurest",
+                producto: "$detallecomanda.descripcion",
+                cantidad: "$detallecomanda.cantidad",
+                preciounitario : "$detallecomanda.precio"
+            }
+        }
+    ];
+
+    var ventas = await Comanda.aggregate(aggOpts).exec();
+    if(ventas){
+        var lista = [], venta = {}, restaurante = {}, prod = {}, datos = [];
+
+        for(var i = 0; i < ventas.length; i++){
+            venta = ventas[i];
+            restaurante = await Restaurante.findById(venta.idrestaurante, 'nombre').exec();
+            for(var j = 0; j < venta.idproducto.length; j++){
+                prod = await Carta.findById(venta.idproducto[j], 'idpadre descripcion').exec();
+                lista.push(
+                    new productoComanda(
+                        venta.idrestaurante,
+                        restaurante.nombre,
+                        venta._id,
+                        venta.tracking,
+                        venta.fecha,
+                        prod.idpadre,
+                        await getRutaProducto(prod.idpadre, []),
+                        venta.idproducto[j],
+                        prod.descripcion,
+                        venta.cantidad[j],
+                        venta.preciounitario[j]
+                    )
+                );
+            }
+        }
+
+        lista = productoComanda.getListaOrdenada(lista);
+        var grupos = productoComanda.getGrupos(lista), subgrupos = [];
+        for(i = 0; i < grupos.length; i++){
+            subgrupos = productoComanda.getSubGrupos(grupos[i], lista);
+            datos.push(
+                {
+                    grupo: grupos[i],
+                    productos: productoComanda.getProductosOrdenadosCantidad(subgrupos.map((sg) => {
+                        let ventas = productoComanda.filter_array(lista.map((item) => {
+                            if (item.rutaproducto === grupos[i] && item.producto === sg) {
+                                return {
+                                    cantidad: item.cantidad,
+                                    precio: item.precio
+                                };
+                            }
+                        }));
+                        
+                        let totCantidad = 0, totPrecio = 0;
+                        ventas.forEach((v) => {
+                            totCantidad += v.cantidad;
+                            totPrecio += v.precio;
+                        });
+
+                        return {
+                            producto: sg,
+                            cantidad: totCantidad,
+                            porcentaje: 0.00,
+                            precio: totPrecio
+                        };
+                    }), false),
+                    sumasGrupo:{
+                        cantidad: 0,
+                        precio: 0.00
+                    }
+                }
+            );            
+        }
+
+        let totalGeneral = 0.00;
+        datos.forEach((dato, i) => {
+            dato.productos.forEach((prod) => {
+                datos[i].sumasGrupo.cantidad += prod.cantidad;
+                datos[i].sumasGrupo.precio += prod.precio;
+            });
+            dato.productos.forEach((prod, j) => {
+                datos[i].productos[j].porcentaje = parseFloat((prod.cantidad * 100 / datos[i].sumasGrupo.cantidad).toFixed(2));
+            });
+            totalGeneral += datos[i].sumasGrupo.precio;
+        });
+                
+        res.status(200).send({
+            mensaje: 'Ventas',
+            lista: datos,
+            totalVendido: totalGeneral,
+            generales: {
+                hoy: moment().format('DD/MM/YY HH:mm:ss'),
+                del: moment(fdel).format('DD/MM/YYYY'),
+                al: moment(fal).format('DD/MM/YYYY')
+            }
+        });
+    } else {
+        res.status(200).send({
+            mensaje: 'No se encontró ninguna venta con esos parámetros.'
+        });
+    }
+
+}
+
+
 module.exports = {
-    ventasPorOperador, ventasPorRestaurante, ventasPorTipoComanda
+    ventasPorOperador, ventasPorRestaurante, ventasPorTipoComanda, ventas
 }

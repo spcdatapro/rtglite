@@ -80,7 +80,7 @@
                         <h4>
                             Orden No. {{cmd.tracking | number:'1.0-0'}} a nombre de {{cmd.idcliente.nombre}}&nbsp;
                             <button type="button" class="btn btn-outline-secondary btn-sm" (click)="verDetCobro(cmd, modalDetCobroComanda)" *ngIf="cmd.detcobrocomanda && cmd.detcobrocomanda.length > 0">Detalle de cobro</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="goToUrl(cmd)" *ngIf="false">Editar</button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" (click)="goToUrl(cmd)" *ngIf="cmd.idestatuscomanda._id != '59fea7bc4218672b285ab0e6'">Editar</button>
                             <button type="button" class="btn btn-outline-warning btn-sm" (click)="printComanda(cmd.tracking, cmd._id)">IMPRIMIR</button>
                         </h4>                        
                     </td>

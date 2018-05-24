@@ -22,7 +22,7 @@ export class VentasVariosComponent implements OnInit {
         token: ''
     };
     public content = undefined;
-    public reporte = 'SJRw1w88f';
+    public reporte = 'H1K11S7ym';
 
     constructor(
         private _route: ActivatedRoute,
