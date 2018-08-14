@@ -110,18 +110,29 @@ function getMintToken(req, res) {
     });
 }
 
+function setLista(body) {
+    try {
+        return JSON.parse(body);
+    } catch (e) {
+        return [];
+    }
+}
+
 async function getMintOrders(req, res) {
     var mintConf = await updateMintToken();
     var accessToken = mintConf.access_token;
     request({
-        url: urlMintApi + 'desde=' + req.body.fdelstr + 'T00:00:00.000&hasta=' + req.body.falstr + 'T23:59:59.999',
+        url: urlMintApi + 'desde=' + req.body.fdelstr + 'T00:00:00.000&hasta=' + req.body.falstr + 'T23:59:59.999&abiertas=false',
         method: 'GET',
         auth: { bearer: accessToken }
     }, function (err, httpResponse, body) {
-        if (err) {
-            res.status(500).send({ mensaje: 'Error al solicitar las órdenes de M1NT. Error: ' + err });
-        }
-        res.status(200).send({ mensaje: 'Lista de órdenes de M1NT.', lista: JSON.parse(body) });
+        let mensaje = 'Lista de órdenes de M1NT.', lista = setLista(body);
+        res.status(200).send({
+            mensaje: mensaje,
+            lista: lista
+        });
+    }).on('error', function(e){
+        console.log('From handler: ' + e);
     });
 }
 

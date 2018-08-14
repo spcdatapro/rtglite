@@ -151,7 +151,8 @@ export class MintService {
         comanda.fechainitoma = moment(pedido.fecha).toDate();
         comanda.fechafintoma = moment(pedido.fecha).toDate();
         comanda.idusuario = this.uid;
-        comanda.idtipocomanda = '5a67816637dfc108b9248851';
+        comanda.idtipocomanda = !pedido.esPickup ? '5a67816637dfc108b9248851' : '59fff311596e572d9cdac916';
+        comanda.notas = !pedido.esPickup ? '' : pedido.observaciones;
         comanda.bitacoraestatus.push(
             new BitacoraEstatus('59fea7524218672b285ab0e3', 'Recibido en restaurante', moment(pedido.fecha).toDate())
         );
