@@ -150,6 +150,7 @@ function print(req, res) {
                 contentType: 'application/pdf',
                 content: fs.createReadStream('pdf/COM' + trackingNo +'.pdf')
             };
+            /*
             request({
                 url: 'https://www.google.com/cloudprint/submit',
                 method: 'POST',                
@@ -164,6 +165,18 @@ function print(req, res) {
 
             }, (reason, response, body) => {
                 res.status(500).send({ mensaje: 'Error2 en el submit de la impresión', error: reason });
+            });
+            */
+            request({
+                url: 'https://www.google.com/cloudprint/submit',
+                method: 'POST',                
+                auth: { bearer: accessToken },
+                formData: frmData
+            }, function (err2, httpResponse2, body2) {
+                res.status(200).send({ response: body2, respuestaHttp: httpResponse2 });
+            }).on('error', (e) => {
+                let str = moment().format('DD/MM/YYYY HH:mm:ss') + ' (GCP Controller): ' + e + '\r\n';
+                fs.appendFileSync('log_jbj.txt', str, 'utf-8');
             });
         });
         
